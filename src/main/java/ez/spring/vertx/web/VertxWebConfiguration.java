@@ -16,6 +16,7 @@ import ez.spring.vertx.web.handler.OkHandler;
 import ez.spring.vertx.web.handler.props.BodyHandlerProps;
 import ez.spring.vertx.web.handler.props.ErrorHandlerProps;
 import ez.spring.vertx.web.handler.props.LoggerHandlerProps;
+import ez.spring.vertx.web.handler.props.StaticHandlerProps;
 import ez.spring.vertx.web.handler.props.TimeoutHandlerProps;
 import ez.spring.vertx.web.route.RouteMapper;
 import ez.spring.vertx.web.route.props.RouteProps;
@@ -24,6 +25,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.ErrorHandler;
 import io.vertx.ext.web.handler.LoggerHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.TimeoutHandler;
 
 @Import({
@@ -31,7 +33,8 @@ import io.vertx.ext.web.handler.TimeoutHandler;
         BodyHandlerProps.class,
         TimeoutHandlerProps.class,
         ErrorHandlerProps.class,
-        LoggerHandlerProps.class
+        LoggerHandlerProps.class,
+        StaticHandlerProps.class
 })
 @Configuration
 @ConfigurationProperties("vertx.web")
@@ -95,5 +98,32 @@ public class VertxWebConfiguration {
     @Bean
     public LoggerHandler loggerHandler(LoggerHandlerProps props) {
         return LoggerHandler.create(props.isImmediate(), props.getLoggerFormat());
+    }
+
+    @ConditionalOnMissingBean(StaticHandler.class)
+    @Bean
+    public StaticHandler staticHandler(StaticHandlerProps props) {
+        return StaticHandler.create()
+                .setAllowRootFileSystemAccess(props.isAllowRootFileSystemAccess())
+                .setAlwaysAsyncFS(props.isAlwaysAsyncFS())
+                .setCacheEntryTimeout(props.getCacheEntryTimeout())
+                .setCachingEnabled(props.isCachingEnabled())
+                .setDefaultContentEncoding(props.getDefaultContentEncoding())
+                .setDirectoryListing(props.isDirectoryListing())
+                .setDirectoryTemplate(props.getDirectoryTemplate())
+                .setEnableFSTuning(props.isEnableFSTuning())
+                .setEnableRangeSupport(props.isEnableRangeSupport())
+                .setFilesReadOnly(props.isReadOnly())
+                .setHttp2PushMapping(props.getHttp2PushMappings())
+                .setIncludeHidden(props.isIncludeHidden())
+                .setIndexPage(props.getIndexPage())
+                .setMaxAgeSeconds(props.getMaxAgeSeconds())
+                .setMaxAvgServeTimeNs(props.getMaxAvgServeTimeNanoSeconds())
+                .setMaxCacheSize(props.getMaxCacheSize())
+                .setSendVaryHeader(props.isVaryHeader())
+                .setWebRoot(props.getWebRoot())
+                .skipCompressionForMediaTypes(props.getSkipCompressionForMediaTypes())
+                .skipCompressionForSuffixes(props.getSkipCompressionForSuffixes())
+                ;
     }
 }
