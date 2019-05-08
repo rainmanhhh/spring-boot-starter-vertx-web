@@ -1,7 +1,5 @@
 package ez.spring.vertx.web.handler;
 
-import org.springframework.lang.Nullable;
-
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -10,6 +8,10 @@ import io.vertx.ext.web.handler.impl.HttpStatusException;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class WebHandler<Request, Response> implements Handler<RoutingContext> {
+    public enum KnownError {
+        DECODE_REQUEST_FAILED
+    }
+
     private final Class<Request> requestClass;
     private RequestReader<Request> requestReader;
     private ResponseWriter<Response> responseWriter;
@@ -28,7 +30,7 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         } catch (Throwable err) {
             fail(event, new HttpStatusException(
                     HttpResponseStatus.BAD_REQUEST.code(),
-                    "decodeRequest failed", err
+                    KnownError.DECODE_REQUEST_FAILED.name(), err
             ));
             return;
         }
@@ -44,18 +46,12 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         }
     }
 
-    private void fail(RoutingContext context, Throwable err, @Nullable String prefix) {
+    private void fail(RoutingContext context, Throwable err) {
         if (err instanceof HttpStatusException) {
             HttpStatusException statusException = (HttpStatusException) err;
-            String message = prefix == null ?
-                    statusException.getPayload() : prefix + statusException.getPayload();
-            context.response().setStatusMessage(message);
+            context.response().setStatusMessage(statusException.getPayload());
             context.fail(statusException.getStatusCode(), err);
         } else context.fail(err);
-    }
-
-    private void fail(RoutingContext context, Throwable err) {
-        fail(context, err, null);
     }
 
     public WebHandler<Request, Response> setRequestReader(RequestReader<Request> requestReader) {

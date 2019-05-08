@@ -1,5 +1,8 @@
 package ez.spring.vertx.web.handler;
 
+import org.springframework.lang.Nullable;
+
+import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
 @SuppressWarnings("WeakerAccess")
@@ -10,8 +13,9 @@ public class JsonBodyRequestReader<Request> implements RequestReader<Request> {
         this.requestClass = requestClass;
     }
 
+    @Nullable
     @Override
     public Request readRequest(RoutingContext context) {
-        return context.getBodyAsJson().mapTo(requestClass);
+        return Json.mapper.convertValue(context.getBodyAsJson(), requestClass);
     }
 }
