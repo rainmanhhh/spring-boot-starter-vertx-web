@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.rainmanhhh</groupId>
     <artifactId>spring-boot-starter-vertx-web</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <name>spring-boot-starter-vertx-web</name>
 
     <properties>
         <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vertxVersion>3.7.0</vertxVersion>
         <springBootVersion>2.1.4.RELEASE</springBootVersion>
     </properties>
@@ -18,12 +19,17 @@
         <dependency>
             <groupId>com.github.rainmanhhh</groupId>
             <artifactId>spring-boot-starter-vertx</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
@@ -49,6 +55,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springBootVersion}</version>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

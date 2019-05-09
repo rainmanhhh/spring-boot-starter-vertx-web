@@ -2,9 +2,9 @@ package ez.spring.vertx.web.route;
 
 import org.springframework.context.ApplicationContext;
 
+import java.util.Collections;
 import java.util.List;
 
-import ez.spring.vertx.web.route.props.RouteProps;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
@@ -13,22 +13,15 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import lombok.Data;
 
+@Data
 public class RouteMapper {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    private ApplicationContext applicationContext;
-    private Router router;
-    private List<RouteProps> routePropsList;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public RouteMapper(
-            ApplicationContext applicationContext,
-            Router router,
-            List<RouteProps> routePropsList
-    ) {
-        this.applicationContext = applicationContext;
-        this.router = router;
-        this.routePropsList = routePropsList;
-    }
+    private final ApplicationContext applicationContext;
+    private final Router router;
+    private List<RouteProps> routePropsList = Collections.emptyList();
 
     @SuppressWarnings("unused")
     public Router map() {

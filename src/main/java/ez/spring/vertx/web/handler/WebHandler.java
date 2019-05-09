@@ -1,7 +1,8 @@
 package ez.spring.vertx.web.handler;
 
+import java.util.concurrent.CompletionStage;
+
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
@@ -35,11 +36,12 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
             return;
         }
         try {
-            Future<Response> responseFuture = exec(request);
-            responseFuture.setHandler(asyncResult -> {
-                if (asyncResult.succeeded())
-                    responseWriter.writeResponse(event, asyncResult.result());
-                else fail(event, asyncResult.cause());
+            CompletionStage<Response> responseFuture = exec(request);
+            responseFuture.thenAccept(response ->
+                    responseWriter.writeResponse(event, response)
+            ).exceptionally(throwable -> {
+                fail(event, throwable);
+                return null;
             });
         } catch (Throwable err) {
             fail(event, err);
@@ -68,5 +70,5 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         return setRequestReader(new QsRequestReader<>(requestClass));
     }
 
-    public abstract Future<Response> exec(Request request) throws Throwable;
+    public abstract CompletionStage<Response> exec(Request request) throws Throwable;
 }
