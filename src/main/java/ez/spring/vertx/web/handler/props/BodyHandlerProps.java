@@ -4,17 +4,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
+import ez.spring.vertx.web.VertxWebConfiguration;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.handler.BodyHandler;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Lazy
+@Accessors(chain = true)
 @Data
 @Component
-@ConfigurationProperties("vertx.web.body-handler")
-public class BodyHandlerProps extends HandlerProps {
-    private boolean enabled = true;
+@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".body-handler")
+public class BodyHandlerProps extends AbstractHandlerProps {
+    private final String handler = BodyHandler.class.getCanonicalName();
+    private Integer order = -500;
+
     private boolean handleFileUploads = true;
     private String uploadDirectory = null;
+
     /**
      * @see BodyHandler#DEFAULT_MERGE_FORM_ATTRIBUTES
      */
@@ -31,4 +41,5 @@ public class BodyHandlerProps extends HandlerProps {
      * @see BodyHandler#DEFAULT_BODY_LIMIT
      */
     private long bodyLimit = -1L;
+    private List<HttpMethod> methods = Arrays.asList(HttpMethod.POST, HttpMethod.PUT);
 }

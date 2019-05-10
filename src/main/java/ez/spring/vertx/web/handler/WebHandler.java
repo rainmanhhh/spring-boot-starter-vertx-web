@@ -1,5 +1,6 @@
 package ez.spring.vertx.web.handler;
 
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -40,7 +41,10 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
             responseFuture.thenAccept(response ->
                     responseWriter.writeResponse(event, response)
             ).exceptionally(throwable -> {
-                fail(event, throwable);
+                if (throwable instanceof CompletionException)
+                    fail(event, throwable.getCause());
+                else
+                    fail(event, throwable);
                 return null;
             });
         } catch (Throwable err) {

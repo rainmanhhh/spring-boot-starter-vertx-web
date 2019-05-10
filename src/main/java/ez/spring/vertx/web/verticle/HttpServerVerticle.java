@@ -18,9 +18,8 @@ import lombok.Setter;
 
 public class HttpServerVerticle extends AbstractVerticle {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final ApplicationContext applicationContext;
     private final HttpServer httpServer;
-    private final Router router;
+    private final RouteMapper routeMapper;
     @Getter
     @Setter
     private List<RouteProps> routes = Collections.emptyList();
@@ -30,14 +29,12 @@ public class HttpServerVerticle extends AbstractVerticle {
             HttpServer httpServer,
             Router router
     ) {
-        this.applicationContext = applicationContext;
         this.httpServer = httpServer;
-        this.router = router;
+        this.routeMapper = new RouteMapper(applicationContext, router);
     }
 
     @Override
     public void start(Future<Void> startFuture) {
-        RouteMapper routeMapper = new RouteMapper(applicationContext, router);
         routeMapper.setRoutePropsList(routes);
         httpServer.requestHandler(
                 routeMapper.map()

@@ -14,7 +14,9 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+@Accessors(chain = true)
 @Data
 public class RouteMapper {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -28,14 +30,20 @@ public class RouteMapper {
         for (int i = 0; i < routePropsList.size(); i++) {
             RouteProps routeProps = routePropsList.get(i);
             try {
+                // path
                 String path = routeProps.getPath();
                 Route route = path == null ? router.route() : router.route(path);
+                // methods
                 List<HttpMethod> methods = routeProps.getMethods();
-                if (!methods.isEmpty()) {
+                if (methods != null) {
                     for (HttpMethod method : methods) {
                         route.method(method);
                     }
                 }
+                // order
+                Integer order = routeProps.getOrder();
+                if (order != null) route.order(order);
+                // handler & errorHandler
                 Class<? extends Handler<RoutingContext>> handlerType = getHandlerType(routeProps.getHandler());
                 Class<? extends Handler<RoutingContext>> errorHandlerType = getHandlerType(routeProps.getErrorHandler());
                 if (handlerType != null) {

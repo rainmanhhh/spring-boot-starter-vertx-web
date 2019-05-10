@@ -9,17 +9,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.Http2PushMapping;
 import io.vertx.ext.web.common.WebEnvironment;
 import io.vertx.ext.web.handler.StaticHandler;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Lazy
+@Accessors(chain = true)
 @Data
 @Component
-@ConfigurationProperties("vertx.web.static-handler")
-public class StaticHandlerProps extends HandlerProps {
+@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".static-handler")
+public class StaticHandlerProps extends AbstractHandlerProps {
     private boolean enabled = false;
+    private Integer order = 1100;
+    private String handler = StaticHandler.class.getCanonicalName();
+    private String path = "/static";
     /**
      * path based on process working dir
      *

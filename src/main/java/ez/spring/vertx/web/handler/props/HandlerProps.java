@@ -1,20 +1,48 @@
 package ez.spring.vertx.web.handler.props;
 
-public abstract class HandlerProps {
-    abstract boolean isEnabled();
+import java.util.List;
 
-    abstract void setEnabled(boolean enabled);
+import io.vertx.core.http.HttpMethod;
+
+public interface HandlerProps {
+    boolean isEnabled();
+
+    HandlerProps setEnabled(boolean enabled);
 
     /**
-     * {@link Integer#MIN_VALUE} means ignore it(use auto-incremental sequence)
+     * null means ignore it(use auto-incremental sequence)
      */
-    private int order = Integer.MIN_VALUE;
+    Integer getOrder();
 
-    public int getOrder() {
-        return order;
-    }
+    /**
+     * null means ignore it(use auto-incremental sequence)
+     */
+    HandlerProps setOrder(Integer order);
 
-    public void setOrder(int order) {
-        this.order = order;
-    }
+    List<HttpMethod> getMethods();
+
+    HandlerProps setMethods(List<HttpMethod> methods);
+
+    /**
+     * @return handler classname
+     */
+    String getHandler();
+
+    /**
+     * @return handler classname
+     */
+    String getErrorHandler();
+
+    /**
+     *
+     * @return null means `/*`
+     */
+    String getPath();
+
+    /**
+     *
+     * @param path null means `/*`
+     * @return this
+     */
+    HandlerProps setPath(String path);
 }
