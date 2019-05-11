@@ -1,19 +1,19 @@
 package ez.spring.vertx.web.handler.props;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.common.WebEnvironment;
 import io.vertx.ext.web.handler.ErrorHandler;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Lazy
-@Accessors(chain = true)
 @Data
-@Component
+@Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".error-handler")
 public class ErrorHandlerProps extends AbstractHandlerProps {
     private Integer order = 1200;
@@ -25,4 +25,11 @@ public class ErrorHandlerProps extends AbstractHandlerProps {
      */
     private String errorTemplateName = "META-INF/vertx/web/vertx-web-error.html";
     private boolean displayExceptionDetails = WebEnvironment.development();
+
+    @Lazy
+    @ConditionalOnMissingBean(ErrorHandler.class)
+    @Bean
+    public ErrorHandler errorHandler() {
+        return ErrorHandler.create(getErrorTemplateName(), isDisplayExceptionDetails());
+    }
 }

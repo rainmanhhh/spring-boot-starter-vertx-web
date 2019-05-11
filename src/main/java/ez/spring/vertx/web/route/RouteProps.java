@@ -5,9 +5,7 @@ import java.util.List;
 
 import io.vertx.core.http.HttpMethod;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
-@Accessors(chain = true)
 @Data
 public class RouteProps {
     private String path;

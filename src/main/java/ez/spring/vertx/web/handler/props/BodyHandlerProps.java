@@ -1,8 +1,10 @@
 package ez.spring.vertx.web.handler.props;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,12 +13,10 @@ import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.handler.BodyHandler;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Lazy
-@Accessors(chain = true)
 @Data
-@Component
+@Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".body-handler")
 public class BodyHandlerProps extends AbstractHandlerProps {
     private final String handler = BodyHandler.class.getCanonicalName();
@@ -42,4 +42,17 @@ public class BodyHandlerProps extends AbstractHandlerProps {
      */
     private long bodyLimit = -1L;
     private List<HttpMethod> methods = Arrays.asList(HttpMethod.POST, HttpMethod.PUT);
+
+    @Lazy
+    @ConditionalOnMissingBean(BodyHandler.class)
+    @Bean
+    public BodyHandler bodyHandler() {
+        BodyHandler bodyHandler = getUploadDirectory() == null ?
+                BodyHandler.create(isHandleFileUploads()) : BodyHandler.create(getUploadDirectory());
+        bodyHandler.setBodyLimit(getBodyLimit());
+        bodyHandler.setMergeFormAttributes(isMergeFormAttributes());
+        bodyHandler.setDeleteUploadedFilesOnEnd(isDeleteUploadedFilesOnEnd());
+        bodyHandler.setPreallocateBodyBuffer(isPreallocateBodyBuffer());
+        return bodyHandler;
+    }
 }

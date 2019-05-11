@@ -1,18 +1,18 @@
 package ez.spring.vertx.web.handler.props;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.handler.FaviconHandler;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Lazy
-@Accessors(chain = true)
 @Data
-@Component
+@Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".favicon-handler")
 public class FaviconHandlerProps extends AbstractHandlerProps {
     private final String handler = FaviconHandler.class.getCanonicalName();
@@ -27,4 +27,11 @@ public class FaviconHandlerProps extends AbstractHandlerProps {
      * icon file path. null means use default icon in vertx jar
      */
     private String iconFilePath;
+
+    @Lazy
+    @ConditionalOnMissingBean(FaviconHandler.class)
+    @Bean
+    public FaviconHandler faviconHandler() {
+        return FaviconHandler.create(getPath(), getMaxAgeSeconds());
+    }
 }

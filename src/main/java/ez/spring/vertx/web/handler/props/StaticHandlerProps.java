@@ -1,8 +1,10 @@
 package ez.spring.vertx.web.handler.props;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -14,12 +16,10 @@ import io.vertx.ext.web.Http2PushMapping;
 import io.vertx.ext.web.common.WebEnvironment;
 import io.vertx.ext.web.handler.StaticHandler;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Lazy
-@Accessors(chain = true)
 @Data
-@Component
+@Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".static-handler")
 public class StaticHandlerProps extends AbstractHandlerProps {
     private boolean enabled = false;
@@ -96,4 +96,32 @@ public class StaticHandlerProps extends AbstractHandlerProps {
      */
     private boolean varyHeader = true;
     private String defaultContentEncoding = StandardCharsets.UTF_8.name();
+
+    @Lazy
+    @ConditionalOnMissingBean(StaticHandler.class)
+    @Bean
+    public StaticHandler staticHandler() {
+        return StaticHandler.create()
+                .setAllowRootFileSystemAccess(isAllowRootFileSystemAccess())
+                .setAlwaysAsyncFS(isAlwaysAsyncFS())
+                .setCacheEntryTimeout(getCacheEntryTimeout())
+                .setCachingEnabled(isCachingEnabled())
+                .setDefaultContentEncoding(getDefaultContentEncoding())
+                .setDirectoryListing(isDirectoryListing())
+                .setDirectoryTemplate(getDirectoryTemplate())
+                .setEnableFSTuning(isEnableFSTuning())
+                .setEnableRangeSupport(isEnableRangeSupport())
+                .setFilesReadOnly(isReadOnly())
+                .setHttp2PushMapping(getHttp2PushMappings())
+                .setIncludeHidden(isIncludeHidden())
+                .setIndexPage(getIndexPage())
+                .setMaxAgeSeconds(getMaxAgeSeconds())
+                .setMaxAvgServeTimeNs(getMaxAvgServeTimeNanoSeconds())
+                .setMaxCacheSize(getMaxCacheSize())
+                .setSendVaryHeader(isVaryHeader())
+                .setWebRoot(getWebRoot())
+                .skipCompressionForMediaTypes(getSkipCompressionForMediaTypes())
+                .skipCompressionForSuffixes(getSkipCompressionForSuffixes())
+                ;
+    }
 }

@@ -10,12 +10,10 @@ import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Lazy
 @Component
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".ok-handler")
-@Accessors(chain = true)
 @Data
 public class OkHandler implements Handler<RoutingContext> {
     private String contentType;

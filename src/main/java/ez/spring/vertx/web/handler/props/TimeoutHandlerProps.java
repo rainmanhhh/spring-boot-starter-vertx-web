@@ -1,23 +1,23 @@
 package ez.spring.vertx.web.handler.props;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.common.WebEnvironment;
 import io.vertx.ext.web.handler.TimeoutHandler;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Lazy
-@Accessors(chain = true)
 @Data
-@Component
+@Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".timeout-handler")
 public class TimeoutHandlerProps extends AbstractHandlerProps {
     private boolean enabled = !WebEnvironment.development();
-    private Integer order = -900;
+    private Integer order = -1000;
     private String handler = TimeoutHandler.class.getCanonicalName();
 
     /**
@@ -28,4 +28,12 @@ public class TimeoutHandlerProps extends AbstractHandlerProps {
      * @see TimeoutHandler#DEFAULT_ERRORCODE
      */
     private int errorCode = 503;
+
+    @Lazy
+    @ConditionalOnMissingBean(TimeoutHandler.class)
+    @Bean
+    public TimeoutHandler timeoutHandler() {
+        return TimeoutHandler.create(getTimeout(), getErrorCode());
+    }
+
 }
