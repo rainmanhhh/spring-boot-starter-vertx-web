@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import ez.spring.vertx.DeploymentOptionsEx;
-import ez.spring.vertx.VerticleDeploy;
+import ez.spring.vertx.deploy.DeploymentOptionsEx;
+import ez.spring.vertx.deploy.VerticleDeploy;
 import ez.spring.vertx.httpServer.HttpServerConfiguration;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import ez.spring.vertx.web.handler.props.HandlerProps;

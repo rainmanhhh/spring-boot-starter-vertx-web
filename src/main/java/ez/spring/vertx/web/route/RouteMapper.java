@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import ez.spring.vertx.Beans;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
@@ -24,7 +25,7 @@ public class RouteMapper {
     private List<RouteProps> routePropsList = Collections.emptyList();
 
     private String toJson(Collection<?> collection) {
-        return collection == null ? "[]" : Json.encode(collection);
+        return collection == null ? "" : Json.encode(collection);
     }
 
     @SuppressWarnings("unused")
@@ -46,21 +47,23 @@ public class RouteMapper {
                 Integer order = routeProps.getOrder();
                 if (order != null) route.order(order);
                 // handler & errorHandler
-                Class<? extends Handler<RoutingContext>> handlerType = getHandlerType(routeProps.getHandler());
-                Class<? extends Handler<RoutingContext>> errorHandlerType = getHandlerType(routeProps.getErrorHandler());
-                if (handlerType != null) {
-                    Handler<RoutingContext> handler = applicationContext.getBean(handlerType);
+                Handler<RoutingContext> handler = getHandler(routeProps.getHandler());
+                Handler<RoutingContext> errorHandler = getHandler(routeProps.getErrorHandler());
+                if (handler != null) {
                     route.handler(handler);
-                    log.info("mapping {}{} to handler: {}", path == null ? "/*" : path, toJson(methods),
-                            handler == null ? null : handler.getClass().getCanonicalName());
+                    log.info("mapping {}{} to handler: {}",
+                            path == null ? "/*" : path,
+                            toJson(methods),
+                            handler.getClass().getCanonicalName());
                 }
-                if (errorHandlerType != null) {
-                    Handler<RoutingContext> errorHandler = applicationContext.getBean(errorHandlerType);
+                if (errorHandler != null) {
                     route.failureHandler(errorHandler);
-                    log.info("mapping {}{} to errorHandler: {}", path == null ? "/*" : path, toJson(methods),
-                            errorHandler == null ? null : errorHandler.getClass().getCanonicalName());
+                    log.info("mapping {}{} to errorHandler: {}",
+                            path == null ? "/*" : path,
+                            toJson(methods),
+                            errorHandler.getClass().getCanonicalName());
                 }
-                if (handlerType == null && errorHandlerType == null) {
+                if (handler == null && errorHandler == null) {
                     log.error("routePropsList[{}] has no handler/errorHandler: {}", i, Json.encode(routeProps));
                 }
             } catch (Throwable err) {
@@ -71,14 +74,8 @@ public class RouteMapper {
         return router;
     }
 
-    private Class<? extends Handler<RoutingContext>> getHandlerType(String typeName) throws ClassNotFoundException {
-        if (typeName == null) return null;
-        ClassLoader beanClassLoader = applicationContext.getClassLoader();
-        if (beanClassLoader == null)
-            throw new NullPointerException("applicationContext.classLoader is null");
-        Class<?> type = beanClassLoader.loadClass(typeName);
-        @SuppressWarnings("unchecked")
-        Class<? extends Handler<RoutingContext>> handlerType = (Class<? extends Handler<RoutingContext>>) type;
-        return handlerType;
+    private Handler<RoutingContext> getHandler(String descriptor) {
+        if (descriptor == null) return null;
+        else return Beans.get(descriptor);
     }
 }
