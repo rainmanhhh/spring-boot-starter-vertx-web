@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.ext.web.common.WebEnvironment;
 import io.vertx.ext.web.handler.TimeoutHandler;
 import lombok.Data;
 
@@ -16,7 +16,7 @@ import lombok.Data;
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".timeout-handler")
 public class TimeoutHandlerProps extends AbstractHandlerProps {
-    private boolean enabled = !WebEnvironment.development();
+    private boolean enabled = !ActiveProfiles.getInstance().isDev();
     private Integer order = -1000;
     private String handler = TimeoutHandler.class.getCanonicalName();
 

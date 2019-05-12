@@ -2,8 +2,10 @@ package ez.spring.vertx.web.route;
 
 import org.springframework.context.ApplicationContext;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
@@ -21,6 +23,10 @@ public class RouteMapper {
     private final Router router;
     private List<RouteProps> routePropsList = Collections.emptyList();
 
+    private String toJson(Collection<?> collection) {
+        return collection == null ? "[]" : Json.encode(collection);
+    }
+
     @SuppressWarnings("unused")
     public Router map() {
         for (int i = 0; i < routePropsList.size(); i++) {
@@ -30,7 +36,7 @@ public class RouteMapper {
                 String path = routeProps.getPath();
                 Route route = path == null ? router.route() : router.route(path);
                 // methods
-                List<HttpMethod> methods = routeProps.getMethods();
+                Set<HttpMethod> methods = routeProps.getMethods();
                 if (methods != null) {
                     for (HttpMethod method : methods) {
                         route.method(method);
@@ -45,13 +51,13 @@ public class RouteMapper {
                 if (handlerType != null) {
                     Handler<RoutingContext> handler = applicationContext.getBean(handlerType);
                     route.handler(handler);
-                    log.info("mapping {}{} to handler: {}", path == null ? "/*" : path, Json.encode(methods),
+                    log.info("mapping {}{} to handler: {}", path == null ? "/*" : path, toJson(methods),
                             handler == null ? null : handler.getClass().getCanonicalName());
                 }
                 if (errorHandlerType != null) {
                     Handler<RoutingContext> errorHandler = applicationContext.getBean(errorHandlerType);
                     route.failureHandler(errorHandler);
-                    log.info("mapping {}{} to errorHandler: {}", path == null ? "/*" : path, Json.encode(methods),
+                    log.info("mapping {}{} to errorHandler: {}", path == null ? "/*" : path, toJson(methods),
                             errorHandler == null ? null : errorHandler.getClass().getCanonicalName());
                 }
                 if (handlerType == null && errorHandlerType == null) {

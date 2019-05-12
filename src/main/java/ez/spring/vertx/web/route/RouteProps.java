@@ -1,16 +1,22 @@
 package ez.spring.vertx.web.route;
 
-import java.util.Collections;
-import java.util.List;
+import org.springframework.lang.Nullable;
+
+import java.util.Set;
 
 import io.vertx.core.http.HttpMethod;
 import lombok.Data;
 
 @Data
 public class RouteProps {
+    @Nullable
     private String path;
-    private List<HttpMethod> methods = Collections.emptyList();
+    @Nullable
+    private Set<HttpMethod> methods = null;
+    @Nullable
     private String handler;
+    @Nullable
     private String errorHandler;
+    @Nullable
     private Integer order = null;
 }

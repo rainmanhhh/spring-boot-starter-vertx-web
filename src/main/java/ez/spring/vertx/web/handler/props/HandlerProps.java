@@ -1,6 +1,6 @@
 package ez.spring.vertx.web.handler.props;
 
-import java.util.List;
+import java.util.Set;
 
 import io.vertx.core.http.HttpMethod;
 
@@ -19,9 +19,9 @@ public interface HandlerProps {
      */
     HandlerProps setOrder(Integer order);
 
-    List<HttpMethod> getMethods();
+    Set<HttpMethod> getMethods();
 
-    HandlerProps setMethods(List<HttpMethod> methods);
+    HandlerProps setMethods(Set<HttpMethod> methods);
 
     /**
      * @return handler classname
@@ -34,13 +34,11 @@ public interface HandlerProps {
     String getErrorHandler();
 
     /**
-     *
      * @return null means `/*`
      */
     String getPath();
 
     /**
-     *
      * @param path null means `/*`
      * @return this
      */

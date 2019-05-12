@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.Nullable;
 
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.handler.FaviconHandler;
@@ -24,14 +25,15 @@ public class FaviconHandlerProps extends AbstractHandlerProps {
      */
     private long maxAgeSeconds = 86400L;
     /**
-     * icon file path. null means use default icon in vertx jar
+     * icon file path. if set to null, use `favicon.ico`(fallback to default icon in vertx jar if not found)
      */
+    @Nullable
     private String iconFilePath;
 
     @Lazy
     @ConditionalOnMissingBean(FaviconHandler.class)
     @Bean
     public FaviconHandler faviconHandler() {
-        return FaviconHandler.create(getPath(), getMaxAgeSeconds());
+        return FaviconHandler.create(getIconFilePath(), getMaxAgeSeconds());
     }
 }

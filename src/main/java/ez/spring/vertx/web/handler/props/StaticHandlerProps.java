@@ -11,9 +11,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.Http2PushMapping;
-import io.vertx.ext.web.common.WebEnvironment;
 import io.vertx.ext.web.handler.StaticHandler;
 import lombok.Data;
 
@@ -47,7 +47,7 @@ public class StaticHandlerProps extends AbstractHandlerProps {
     /**
      * @see StaticHandler#DEFAULT_CACHING_ENABLED
      */
-    private boolean cachingEnabled = !WebEnvironment.development();
+    private boolean cachingEnabled = !ActiveProfiles.getInstance().isDev();
     /**
      * @see StaticHandler#DEFAULT_DIRECTORY_LISTING
      */

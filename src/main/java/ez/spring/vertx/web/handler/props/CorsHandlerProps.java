@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".cors-handler")
 public class CorsHandlerProps extends AbstractHandlerProps {
     private String handler = CorsHandler.class.getCanonicalName();
-    private int order = -900;
+    private Integer order = -900;
 
     /**
      * if set to `*`, {@link #allowCredentials} cannot be true

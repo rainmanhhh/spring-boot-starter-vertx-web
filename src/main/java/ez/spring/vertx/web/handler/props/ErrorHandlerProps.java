@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.ext.web.common.WebEnvironment;
 import io.vertx.ext.web.handler.ErrorHandler;
 import lombok.Data;
 
@@ -24,7 +24,7 @@ public class ErrorHandlerProps extends AbstractHandlerProps {
      * @see ErrorHandler#DEFAULT_ERROR_HANDLER_TEMPLATE
      */
     private String errorTemplateName = "META-INF/vertx/web/vertx-web-error.html";
-    private boolean displayExceptionDetails = WebEnvironment.development();
+    private boolean displayExceptionDetails = ActiveProfiles.getInstance().isDev();
 
     @Lazy
     @ConditionalOnMissingBean(ErrorHandler.class)

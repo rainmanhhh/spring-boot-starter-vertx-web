@@ -1,10 +1,10 @@
 package ez.spring.vertx.web;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.VertxConfiguration;
 import ez.spring.vertx.httpServer.HttpServerConfiguration;
 import ez.spring.vertx.web.handler.OkHandler;
@@ -20,7 +20,7 @@ import io.vertx.ext.web.common.WebEnvironment;
 
 /**
  * when this config init, {@link WebEnvironment#mode()} value will be set
- * by spring active profile
+ * by {@link ActiveProfiles}
  */
 @Import({
         VertxConfiguration.class,
@@ -40,18 +40,14 @@ import io.vertx.ext.web.common.WebEnvironment;
 public class VertxWebConfiguration {
     public static final String PREFIX = VertxConfiguration.PREFIX + ".web";
 
-    public VertxWebConfiguration(
-            ApplicationContext applicationContext
-    ) {
-        String[] activeProfiles = applicationContext.getEnvironment().getActiveProfiles();
-        for (String profile : activeProfiles) {
-            if (profile.equalsIgnoreCase("dev") || profile.equalsIgnoreCase("Development")) {
-                System.setProperty(WebEnvironment.SYSTEM_PROPERTY_NAME, profile);
-                break;
-            }
-        }
-        if (WebEnvironment.mode() == null && activeProfiles.length > 0) {
-            System.setProperty(WebEnvironment.SYSTEM_PROPERTY_NAME, activeProfiles[0]);
+    public VertxWebConfiguration() {
+        ActiveProfiles activeProfiles = ActiveProfiles.getInstance();
+        if (activeProfiles.isDev()) {
+            System.setProperty(WebEnvironment.SYSTEM_PROPERTY_NAME, "dev");
+        } else if (activeProfiles.isProd()) {
+            System.setProperty(WebEnvironment.SYSTEM_PROPERTY_NAME, "prod");
+        } else if (activeProfiles.isTest()) {
+            System.setProperty(WebEnvironment.SYSTEM_PROPERTY_NAME, "test");
         }
     }
 }
