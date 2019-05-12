@@ -8,17 +8,15 @@ import java.util.List;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 public class RouteMapper {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private final ApplicationContext applicationContext;
     private final Router router;
     private List<RouteProps> routePropsList = Collections.emptyList();
@@ -47,20 +45,20 @@ public class RouteMapper {
                 if (handlerType != null) {
                     Handler<RoutingContext> handler = applicationContext.getBean(handlerType);
                     route.handler(handler);
-                    logger.info("mapping {}{} to handler: {}", path == null ? "/*" : path, Json.encode(methods),
+                    log.info("mapping {}{} to handler: {}", path == null ? "/*" : path, Json.encode(methods),
                             handler == null ? null : handler.getClass().getCanonicalName());
                 }
                 if (errorHandlerType != null) {
                     Handler<RoutingContext> errorHandler = applicationContext.getBean(errorHandlerType);
                     route.failureHandler(errorHandler);
-                    logger.info("mapping {}{} to errorHandler: {}", path == null ? "/*" : path, Json.encode(methods),
+                    log.info("mapping {}{} to errorHandler: {}", path == null ? "/*" : path, Json.encode(methods),
                             errorHandler == null ? null : errorHandler.getClass().getCanonicalName());
                 }
                 if (handlerType == null && errorHandlerType == null) {
-                    logger.error("routePropsList[{}] has no handler/errorHandler: {}", i, Json.encode(routeProps));
+                    log.error("routePropsList[{}] has no handler/errorHandler: {}", i, Json.encode(routeProps));
                 }
             } catch (Throwable err) {
-                logger.error("mapping routes[{}]: {} failed", i, Json.encode(routeProps), err);
+                log.error("mapping routes[{}]: {} failed", i, Json.encode(routeProps), err);
                 throw new RuntimeException(err);
             }
         }

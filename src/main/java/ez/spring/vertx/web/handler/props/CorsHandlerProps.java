@@ -12,7 +12,9 @@ import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.handler.CorsHandler;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Lazy
 @Data
 @Configuration
@@ -21,11 +23,20 @@ public class CorsHandlerProps extends AbstractHandlerProps {
     private String handler = CorsHandler.class.getCanonicalName();
     private int order = -900;
 
+    /**
+     * if set to `*`, {@link #allowCredentials} cannot be true
+     */
     private String allowedOriginPattern = "*";
     private Set<HttpMethod> allowedMethods = null;
     private Set<String> allowedHeaders = null;
     private Set<String> exposedHeaders = null;
+    /**
+     * if set to true, {@link #allowedOriginPattern} cannot be `*`
+     */
     private boolean allowCredentials = false;
+    /**
+     * default value is -1(means no max age limit)
+     */
     private int maxAgeSeconds = -1;
 
     @Lazy

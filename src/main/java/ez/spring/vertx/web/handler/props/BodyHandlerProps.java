@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.core.http.HttpMethod;
@@ -41,7 +42,7 @@ public class BodyHandlerProps extends AbstractHandlerProps {
      * @see BodyHandler#DEFAULT_BODY_LIMIT
      */
     private long bodyLimit = -1L;
-    private List<HttpMethod> methods = Arrays.asList(HttpMethod.POST, HttpMethod.PUT);
+    private Set<HttpMethod> methods = new HashSet<>(Arrays.asList(HttpMethod.POST, HttpMethod.PUT));
 
     @Lazy
     @ConditionalOnMissingBean(BodyHandler.class)
