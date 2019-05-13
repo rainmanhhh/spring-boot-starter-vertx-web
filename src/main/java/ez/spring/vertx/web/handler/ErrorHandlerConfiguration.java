@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".error-handler")
-public class ErrorHandlerProps extends AbstractHandlerProps {
+public class ErrorHandlerConfiguration extends AbstractHandlerConfiguration {
     private Integer order = 1200;
     private final String handler = null;
     private final String errorHandler = ErrorHandler.class.getCanonicalName();

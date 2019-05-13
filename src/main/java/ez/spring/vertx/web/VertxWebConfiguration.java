@@ -8,14 +8,14 @@ import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.VertxConfiguration;
 import ez.spring.vertx.httpServer.HttpServerConfiguration;
 import ez.spring.vertx.web.handler.OkHandler;
-import ez.spring.vertx.web.handler.props.BodyHandlerProps;
-import ez.spring.vertx.web.handler.props.CorsHandlerProps;
-import ez.spring.vertx.web.handler.props.ErrorHandlerProps;
-import ez.spring.vertx.web.handler.props.FaviconHandlerProps;
-import ez.spring.vertx.web.handler.props.LoggerHandlerProps;
-import ez.spring.vertx.web.handler.props.StaticHandlerProps;
-import ez.spring.vertx.web.handler.props.TimeoutHandlerProps;
-import ez.spring.vertx.web.verticle.HttpServerVerticleProps;
+import ez.spring.vertx.web.handler.BodyHandlerConfiguration;
+import ez.spring.vertx.web.handler.CorsHandlerConfiguration;
+import ez.spring.vertx.web.handler.ErrorHandlerConfiguration;
+import ez.spring.vertx.web.handler.FaviconHandlerConfiguration;
+import ez.spring.vertx.web.handler.LoggerHandlerConfiguration;
+import ez.spring.vertx.web.handler.StaticHandlerConfiguration;
+import ez.spring.vertx.web.handler.TimeoutHandlerConfiguration;
+import ez.spring.vertx.web.verticle.HttpServerVerticleConfiguration;
 import io.vertx.ext.web.common.WebEnvironment;
 
 /**
@@ -25,14 +25,14 @@ import io.vertx.ext.web.common.WebEnvironment;
 @Import({
         VertxConfiguration.class,
         HttpServerConfiguration.class,
-        HttpServerVerticleProps.class,
-        BodyHandlerProps.class,
-        TimeoutHandlerProps.class,
-        ErrorHandlerProps.class,
-        LoggerHandlerProps.class,
-        StaticHandlerProps.class,
-        FaviconHandlerProps.class,
-        CorsHandlerProps.class,
+        HttpServerVerticleConfiguration.class,
+        BodyHandlerConfiguration.class,
+        TimeoutHandlerConfiguration.class,
+        ErrorHandlerConfiguration.class,
+        LoggerHandlerConfiguration.class,
+        StaticHandlerConfiguration.class,
+        FaviconHandlerConfiguration.class,
+        CorsHandlerConfiguration.class,
         OkHandler.class
 })
 @Configuration

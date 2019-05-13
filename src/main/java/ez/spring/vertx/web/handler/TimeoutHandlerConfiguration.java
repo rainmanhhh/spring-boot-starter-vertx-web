@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".timeout-handler")
-public class TimeoutHandlerProps extends AbstractHandlerProps {
+public class TimeoutHandlerConfiguration extends AbstractHandlerConfiguration {
     private boolean enabled = !ActiveProfiles.getInstance().isDev();
     private Integer order = -1000;
     private String handler = TimeoutHandler.class.getCanonicalName();

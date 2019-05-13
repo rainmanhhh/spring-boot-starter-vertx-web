@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".log-handler")
-public class LoggerHandlerProps extends AbstractHandlerProps {
+public class LoggerHandlerConfiguration extends AbstractHandlerConfiguration {
     private String handler = LoggerHandler.class.getCanonicalName();
     private Integer order = -800;
 
@@ -28,7 +28,7 @@ public class LoggerHandlerProps extends AbstractHandlerProps {
     @Lazy
     @ConditionalOnMissingBean(LoggerHandler.class)
     @Bean
-    public LoggerHandler loggerHandler(LoggerHandlerProps props) {
+    public LoggerHandler loggerHandler(LoggerHandlerConfiguration props) {
         return LoggerHandler.create(props.isImmediate(), props.getLoggerFormat());
     }
 }

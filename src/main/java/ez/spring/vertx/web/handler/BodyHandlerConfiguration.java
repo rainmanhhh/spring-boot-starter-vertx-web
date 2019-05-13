@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,7 +19,7 @@ import lombok.Data;
 @Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".body-handler")
-public class BodyHandlerProps extends AbstractHandlerProps {
+public class BodyHandlerConfiguration extends AbstractHandlerConfiguration {
     private final String handler = BodyHandler.class.getCanonicalName();
     private Integer order = -500;
 

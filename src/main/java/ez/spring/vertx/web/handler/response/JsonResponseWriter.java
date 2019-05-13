@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler;
+package ez.spring.vertx.web.handler.response;
 
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;

@@ -4,6 +4,11 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 
 import ez.spring.vertx.util.ParameterizedTypeHelper;
+import ez.spring.vertx.web.handler.request.JsonBodyRequestReader;
+import ez.spring.vertx.web.handler.request.QsRequestReader;
+import ez.spring.vertx.web.handler.request.RequestReader;
+import ez.spring.vertx.web.handler.response.JsonResponseWriter;
+import ez.spring.vertx.web.handler.response.ResponseWriter;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
@@ -11,14 +16,9 @@ import io.vertx.ext.web.handler.impl.HttpStatusException;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class WebHandler<Request, Response> implements Handler<RoutingContext> {
-    public enum KnownError {
-        DECODE_REQUEST_FAILED
-    }
-
     private final Class<Request> requestClass;
     private RequestReader<Request> requestReader;
     private ResponseWriter<Response> responseWriter;
-
     protected WebHandler() {
         this.requestClass = ParameterizedTypeHelper.of(this.getClass(), WebHandler.class).get(0);
         requestReader = new JsonBodyRequestReader<>(requestClass);
@@ -31,10 +31,7 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         try {
             request = requestReader.readRequest(event);
         } catch (Throwable err) {
-            fail(event, new HttpStatusException(
-                    HttpResponseStatus.BAD_REQUEST.code(),
-                    KnownError.DECODE_REQUEST_FAILED.name(), err
-            ));
+            fail(event, KnownError.DECODE_REQUEST_FAILED.error(err));
             return;
         }
         try {
@@ -76,4 +73,23 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
     }
 
     public abstract CompletionStage<Response> exec(Request request) throws Throwable;
+
+    public enum KnownError {
+        DECODE_REQUEST_FAILED(HttpResponseStatus.BAD_REQUEST);
+        private HttpResponseStatus status;
+        private HttpStatusException ex;
+
+        KnownError(HttpResponseStatus status) {
+            this.status = status;
+            ex = new HttpStatusException(status.code(), name());
+        }
+
+        public HttpStatusException error(Throwable cause) {
+            return cause == null ? ex : new HttpStatusException(status.code(), name());
+        }
+
+        public HttpStatusException error() {
+            return error(null);
+        }
+    }
 }

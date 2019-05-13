@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".favicon-handler")
-public class FaviconHandlerProps extends AbstractHandlerProps {
+public class FaviconHandlerConfiguration extends AbstractHandlerConfiguration {
     private final String handler = FaviconHandler.class.getCanonicalName();
     private Integer order = 1000;
     private String path = "/favicon.ico";

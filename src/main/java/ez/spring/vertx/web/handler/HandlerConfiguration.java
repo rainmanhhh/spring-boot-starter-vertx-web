@@ -1,13 +1,13 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import java.util.Set;
 
 import io.vertx.core.http.HttpMethod;
 
-public interface HandlerProps {
+public interface HandlerConfiguration {
     boolean isEnabled();
 
-    HandlerProps setEnabled(boolean enabled);
+    HandlerConfiguration setEnabled(boolean enabled);
 
     /**
      * null means ignore it(use auto-incremental sequence)
@@ -17,11 +17,11 @@ public interface HandlerProps {
     /**
      * null means ignore it(use auto-incremental sequence)
      */
-    HandlerProps setOrder(Integer order);
+    HandlerConfiguration setOrder(Integer order);
 
     Set<HttpMethod> getMethods();
 
-    HandlerProps setMethods(Set<HttpMethod> methods);
+    HandlerConfiguration setMethods(Set<HttpMethod> methods);
 
     /**
      * @return handler classname
@@ -42,5 +42,5 @@ public interface HandlerProps {
      * @param path null means `/*`
      * @return this
      */
-    HandlerProps setPath(String path);
+    HandlerConfiguration setPath(String path);
 }

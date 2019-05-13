@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import java.util.Set;
 
@@ -6,7 +6,7 @@ import io.vertx.core.http.HttpMethod;
 import lombok.Data;
 
 @Data
-public abstract class AbstractHandlerProps implements HandlerProps {
+public abstract class AbstractHandlerConfiguration implements HandlerConfiguration {
     private boolean enabled = true;
     private final String errorHandler = null;
     private Integer order = null;

@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler;
+package ez.spring.vertx.web.handler.request;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

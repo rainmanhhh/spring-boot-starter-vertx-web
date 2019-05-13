@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler.props;
+package ez.spring.vertx.web.handler;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".static-handler")
-public class StaticHandlerProps extends AbstractHandlerProps {
+public class StaticHandlerConfiguration extends AbstractHandlerConfiguration {
     private boolean enabled = false;
     private Integer order = 1100;
     private String handler = StaticHandler.class.getCanonicalName();

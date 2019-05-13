@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler;
+package ez.spring.vertx.web.handler.response;
 
 import io.vertx.ext.web.RoutingContext;
 
