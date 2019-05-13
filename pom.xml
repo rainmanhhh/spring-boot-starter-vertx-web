@@ -36,6 +36,12 @@
             <artifactId>vertx-web</artifactId>
             <version>${vertxVersion}</version>
         </dependency>
+        <dependency>
+            <artifactId>jsr305</artifactId>
+            <groupId>com.google.code.findbugs</groupId>
+            <scope>provided</scope>
+            <version>3.0.2</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

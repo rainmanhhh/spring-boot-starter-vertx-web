@@ -3,7 +3,7 @@ package ez.spring.vertx.web.handler;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 
-import ez.spring.vertx.util.ParameterizedTypeHelper;
+import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.handler.request.JsonBodyRequestReader;
 import ez.spring.vertx.web.handler.request.QsRequestReader;
 import ez.spring.vertx.web.handler.request.RequestReader;
@@ -19,8 +19,9 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
     private final Class<Request> requestClass;
     private RequestReader<Request> requestReader;
     private ResponseWriter<Response> responseWriter;
+
     protected WebHandler() {
-        this.requestClass = ParameterizedTypeHelper.of(this.getClass(), WebHandler.class).get(0);
+        this.requestClass = EzUtil.parameterizedTypes(WebHandler.class, this.getClass()).get(0);
         requestReader = new JsonBodyRequestReader<>(requestClass);
         responseWriter = new JsonResponseWriter<>();
     }

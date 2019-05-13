@@ -11,11 +11,14 @@ public interface HandlerConfiguration {
 
     /**
      * null means ignore it(use auto-incremental sequence)
+     * @return order
      */
     Integer getOrder();
 
     /**
      * null means ignore it(use auto-incremental sequence)
+     * @param order order value
+     * @return this
      */
     HandlerConfiguration setOrder(Integer order);
 
