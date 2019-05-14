@@ -22,7 +22,7 @@ import ez.spring.vertx.web.VertxWebConfiguration;
 import ez.spring.vertx.web.handler.HandlerConfiguration;
 import ez.spring.vertx.web.route.RouteProps;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class HttpServerVerticleConfiguration {
     public HttpServerVerticle httpServerVerticle(
             ApplicationContext applicationContext,
             HttpServerVerticleConfiguration httpServerVerticleConfiguration,
-            HttpServer httpServer,
+            HttpServerOptions httpServerOptions,
             Router router
     ) {
         Collection<HandlerConfiguration> handlerProps = applicationContext.getBeansOfType(HandlerConfiguration.class).values();
@@ -98,6 +98,6 @@ public class HttpServerVerticleConfiguration {
         }
 
         // set routes for httpServerVerticle
-        return new HttpServerVerticle(applicationContext, httpServer, router).setRoutes(routes);
+        return new HttpServerVerticle(applicationContext, httpServerOptions, router).setRoutes(routes);
     }
 }
