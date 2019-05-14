@@ -25,7 +25,7 @@ public class StaticHandlerConfiguration extends AbstractHandlerConfiguration {
     private boolean enabled = false;
     private Integer order = 1100;
     private String handler = StaticHandler.class.getCanonicalName();
-    private String path = "/static";
+    private String path = "/static/*";
     /**
      * path based on process working dir
      *
