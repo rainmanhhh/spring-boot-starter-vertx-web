@@ -7,12 +7,13 @@ import org.springframework.context.annotation.Import;
 import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.VertxConfiguration;
 import ez.spring.vertx.httpServer.HttpServerConfiguration;
-import ez.spring.vertx.web.handler.OkHandler;
 import ez.spring.vertx.web.handler.BodyHandlerConfiguration;
 import ez.spring.vertx.web.handler.CorsHandlerConfiguration;
 import ez.spring.vertx.web.handler.ErrorHandlerConfiguration;
+import ez.spring.vertx.web.handler.ErrorLogHandlerConfiguration;
 import ez.spring.vertx.web.handler.FaviconHandlerConfiguration;
 import ez.spring.vertx.web.handler.LoggerHandlerConfiguration;
+import ez.spring.vertx.web.handler.OkHandler;
 import ez.spring.vertx.web.handler.StaticHandlerConfiguration;
 import ez.spring.vertx.web.handler.TimeoutHandlerConfiguration;
 import ez.spring.vertx.web.verticle.HttpServerVerticleConfiguration;
@@ -28,6 +29,7 @@ import io.vertx.ext.web.common.WebEnvironment;
         HttpServerVerticleConfiguration.class,
         BodyHandlerConfiguration.class,
         TimeoutHandlerConfiguration.class,
+        ErrorLogHandlerConfiguration.class,
         ErrorHandlerConfiguration.class,
         LoggerHandlerConfiguration.class,
         StaticHandlerConfiguration.class,
