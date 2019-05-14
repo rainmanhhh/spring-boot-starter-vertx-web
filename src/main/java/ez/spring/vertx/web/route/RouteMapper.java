@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import ez.spring.vertx.Beans;
+import ez.spring.vertx.web.handler.OptionsHandler;
+import ez.spring.vertx.web.handler.WebHandler;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
@@ -38,11 +40,7 @@ public class RouteMapper {
                 Route route = path == null ? router.route() : router.route(path);
                 // methods
                 Set<HttpMethod> methods = routeProps.getMethods();
-                if (methods != null) {
-                    for (HttpMethod method : methods) {
-                        route.method(method);
-                    }
-                }
+                setMethods(route, methods);
                 // order
                 Integer order = routeProps.getOrder();
                 if (order != null) route.order(order);
@@ -50,11 +48,22 @@ public class RouteMapper {
                 Handler<RoutingContext> handler = getHandler(routeProps.getHandler());
                 Handler<RoutingContext> errorHandler = getHandler(routeProps.getErrorHandler());
                 if (handler != null) {
+                    // optionsHandler
+                    boolean withOptionsHandler = routeProps.isWithOptionsHandler();
+                    if (handler instanceof WebHandler)
+                        withOptionsHandler = ((WebHandler) handler).isWithOptionsHandler();
+                    if (withOptionsHandler) {
+                        Route optionsRoute = path == null ? router.route() : router.route(path);
+                        optionsRoute.method(HttpMethod.OPTIONS);
+                        optionsRoute.handler(new OptionsHandler(methods));
+                    }
                     route.handler(handler);
-                    log.info("mapping {}{} to handler: {}",
+                    log.info("mapping {}{} to handler: {}{}",
                             path == null ? "/*" : path,
                             toJson(methods),
-                            handler.getClass().getCanonicalName());
+                            handler.getClass().getCanonicalName(),
+                            withOptionsHandler ? " (support OPTIONS)" : ""
+                    );
                 }
                 if (errorHandler != null) {
                     route.failureHandler(errorHandler);
@@ -77,5 +86,13 @@ public class RouteMapper {
     private Handler<RoutingContext> getHandler(String descriptor) {
         if (descriptor == null) return null;
         else return Beans.get(descriptor);
+    }
+
+    private void setMethods(Route route, Set<HttpMethod> methods) {
+        if (methods != null) {
+            for (HttpMethod method : methods) {
+                route.method(method);
+            }
+        }
     }
 }

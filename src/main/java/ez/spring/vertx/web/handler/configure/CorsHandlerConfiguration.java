@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler;
+package ez.spring.vertx.web.handler.configure;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;

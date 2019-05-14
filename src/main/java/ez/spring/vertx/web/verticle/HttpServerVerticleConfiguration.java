@@ -19,7 +19,7 @@ import ez.spring.vertx.deploy.DeploymentOptionsEx;
 import ez.spring.vertx.deploy.VerticleDeploy;
 import ez.spring.vertx.httpServer.HttpServerConfiguration;
 import ez.spring.vertx.web.VertxWebConfiguration;
-import ez.spring.vertx.web.handler.HandlerConfiguration;
+import ez.spring.vertx.web.handler.configure.HandlerConfiguration;
 import ez.spring.vertx.web.route.RouteProps;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
@@ -66,16 +66,10 @@ public class HttpServerVerticleConfiguration {
         handlerConfigurationList.sort(Comparator.comparing(HandlerConfiguration::getOrder));
         ArrayList<RouteProps> routes = new ArrayList<>();
         // add common routes whose order is null or less than 0
-        for (HandlerConfiguration props : handlerConfigurationList) {
-            Integer order = props.getOrder();
-            if (props.isEnabled() && (order == null || order < 0)) {
-                routes.add(new RouteProps()
-                        .setHandler(props.getHandler())
-                        .setErrorHandler(props.getErrorHandler())
-                        .setOrder(order)
-                        .setMethods(props.getMethods())
-                        .setPath(props.getPath())
-                );
+        for (HandlerConfiguration handlerConfiguration : handlerConfigurationList) {
+            Integer order = handlerConfiguration.getOrder();
+            if (handlerConfiguration.isEnabled() && (order == null || order < 0)) {
+                routes.add(routeProps(handlerConfiguration));
             }
         }
 
@@ -84,20 +78,24 @@ public class HttpServerVerticleConfiguration {
         if (customRoutes != null && !customRoutes.isEmpty()) routes.addAll(customRoutes);
 
         // add common routes whose order greater than 0
-        for (HandlerConfiguration props : handlerConfigurationList) {
-            Integer order = props.getOrder();
-            if (props.isEnabled() && order != null && order > 0) {
-                routes.add(new RouteProps()
-                        .setHandler(props.getHandler())
-                        .setErrorHandler(props.getErrorHandler())
-                        .setOrder(order)
-                        .setMethods(props.getMethods())
-                        .setPath(props.getPath())
-                );
+        for (HandlerConfiguration handlerConfiguration : handlerConfigurationList) {
+            Integer order = handlerConfiguration.getOrder();
+            if (handlerConfiguration.isEnabled() && order != null && order > 0) {
+                routes.add(routeProps(handlerConfiguration));
             }
         }
 
         // set routes for httpServerVerticle
         return new HttpServerVerticle(applicationContext, httpServerOptions, router).setRoutes(routes);
+    }
+
+    private RouteProps routeProps(HandlerConfiguration hc) {
+        return new RouteProps()
+                .setPath(hc.getPath())
+                .setOrder(hc.getOrder())
+                .setMethods(hc.getMethods())
+                .setHandler(hc.getHandler())
+                .setErrorHandler(hc.getErrorHandler())
+                .setWithOptionsHandler(hc.isWithOptionsHandler());
     }
 }

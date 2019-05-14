@@ -23,19 +23,22 @@ public class ErrorLogHandler implements Handler<RoutingContext> {
     protected void log(RoutingContext context) {
         Throwable failure = context.failure();
         if (failure != null) {
+            String errClass = failure.getClass().getCanonicalName();
             if (failure instanceof HttpStatusException) {
                 HttpStatusException se = (HttpStatusException) failure;
                 int statusCode = se.getStatusCode();
                 String payload = se.getPayload();
                 Throwable cause = se.getCause();
+                if (failure.getClass() == HttpStatusException.class) errClass = "";
                 if (statusCode >= getErrorCode()) {
-                    log.error("http-{}: {}", statusCode, payload, cause);
+                    log.error("http-{} {}: {}", statusCode, errClass, payload, cause);
                 } else if (statusCode >= getWarnCode()) {
-                    if (isShowWarnStack()) log.warn("http-{}: {}", statusCode, payload, cause);
-                    else log.warn("http-{}: {}", statusCode, payload);
+                    if (isShowWarnStack())
+                        log.warn("http-{} {}: {}", statusCode, errClass, payload, cause);
+                    else log.warn("http-{} {}: {}", statusCode, errClass, payload);
                 } // else LoggerHandler will do log
             } else
-                log.error("{}: {}", failure.getClass().getCanonicalName(), failure.getMessage(), failure);
+                log.error("{}: {}", errClass, failure.getMessage(), failure);
         } // else LoggerHandler will do log
     }
 }

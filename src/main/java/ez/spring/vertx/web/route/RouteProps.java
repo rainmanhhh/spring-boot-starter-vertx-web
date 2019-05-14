@@ -19,4 +19,5 @@ public class RouteProps {
     private String errorHandler;
     @Nullable
     private Integer order = null;
+    private boolean withOptionsHandler = false;
 }

@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler;
+package ez.spring.vertx.web.handler.configure;
 
 import java.util.Set;
 
@@ -46,4 +46,8 @@ public interface HandlerConfiguration {
      * @return this
      */
     HandlerConfiguration setPath(String path);
+
+    boolean isWithOptionsHandler();
+
+    HandlerConfiguration setWithOptionsHandler(boolean withOptionsHandler);
 }

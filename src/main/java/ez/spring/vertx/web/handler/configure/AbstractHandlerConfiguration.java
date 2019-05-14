@@ -1,4 +1,4 @@
-package ez.spring.vertx.web.handler;
+package ez.spring.vertx.web.handler.configure;
 
 import java.util.Set;
 
@@ -12,4 +12,5 @@ public abstract class AbstractHandlerConfiguration implements HandlerConfigurati
     private Integer order = null;
     private Set<HttpMethod> methods = null;
     private String path = null;
+    private boolean withOptionsHandler = false;
 }

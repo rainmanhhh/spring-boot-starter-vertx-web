@@ -1,5 +1,7 @@
 package ez.spring.vertx.web.handler;
 
+import org.springframework.lang.Nullable;
+
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 
@@ -13,16 +15,20 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
+import lombok.Data;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
+@Data
 public abstract class WebHandler<Request, Response> implements Handler<RoutingContext> {
     private final Class<Request> requestClass;
+    @Nullable
     private RequestReader<Request> requestReader;
     private ResponseWriter<Response> responseWriter;
+    private boolean withOptionsHandler = true;
 
     protected WebHandler() {
-        this.requestClass = EzUtil.parameterizedTypes(WebHandler.class, this.getClass()).get(0);
-        requestReader = new JsonBodyRequestReader<>(requestClass);
+        requestClass = EzUtil.parameterizedTypes(WebHandler.class, this.getClass()).get(0);
+        requestReader = requestClass == Void.class ? null : new JsonBodyRequestReader<>(requestClass);
         responseWriter = new JsonResponseWriter<>();
     }
 
@@ -30,7 +36,7 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
     public final void handle(RoutingContext event) {
         final Request request;
         try {
-            request = requestReader.readRequest(event);
+            request = requestReader == null ? null : requestReader.readRequest(event);
         } catch (Throwable err) {
             fail(event, KnownError.DECODE_REQUEST_FAILED.error(err));
             return;
@@ -59,21 +65,11 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         } else context.fail(err);
     }
 
-    public WebHandler<Request, Response> setRequestReader(RequestReader<Request> requestReader) {
-        this.requestReader = requestReader;
-        return this;
-    }
-
-    public WebHandler<Request, Response> setResponseWriter(ResponseWriter<Response> responseWriter) {
-        this.responseWriter = responseWriter;
-        return this;
-    }
-
     public WebHandler<Request, Response> useQs() {
         return setRequestReader(new QsRequestReader<>(requestClass));
     }
 
-    public abstract CompletionStage<Response> exec(Request request) throws Throwable;
+    public abstract CompletionStage<Response> exec(@Nullable Request request) throws Throwable;
 
     public enum KnownError {
         DECODE_REQUEST_FAILED(HttpResponseStatus.BAD_REQUEST);
