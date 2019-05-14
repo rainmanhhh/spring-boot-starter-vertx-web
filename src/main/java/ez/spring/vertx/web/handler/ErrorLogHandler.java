@@ -16,7 +16,12 @@ public class ErrorLogHandler implements Handler<RoutingContext> {
 
     @Override
     public void handle(RoutingContext event) {
-        Throwable failure = event.failure();
+        event.addBodyEndHandler(v -> log(event));
+        event.next();
+    }
+
+    protected void log(RoutingContext context) {
+        Throwable failure = context.failure();
         if (failure != null) {
             if (failure instanceof HttpStatusException) {
                 HttpStatusException se = (HttpStatusException) failure;
@@ -32,6 +37,5 @@ public class ErrorLogHandler implements Handler<RoutingContext> {
             } else
                 log.error("{}: {}", failure.getClass().getCanonicalName(), failure.getMessage(), failure);
         } // else LoggerHandler will do log
-        event.next();
     }
 }

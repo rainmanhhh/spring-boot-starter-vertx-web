@@ -16,15 +16,18 @@ import lombok.Data;
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + "error-log-handler")
 @Configuration
 public class ErrorLogHandlerConfiguration extends AbstractHandlerConfiguration {
-    private String handler = null;
-    private String errorHandler = ErrorLogHandler.class.getCanonicalName();
-    private Integer order = 1200;
+    private String handler = ErrorLogHandler.class.getCanonicalName();
+    private Integer order = -700;
 
     /**
+     * {@link io.vertx.ext.web.handler.impl.HttpStatusException}
+     * with code greater then this value will be log as error
      * @see HttpResponseStatus#INTERNAL_SERVER_ERROR
      */
     private int errorCode = 500;
     /**
+     * {@link io.vertx.ext.web.handler.impl.HttpStatusException}
+     * with code greater then this value will be log as warning
      * @see HttpResponseStatus#BAD_REQUEST
      */
     private int warnCode = 400;

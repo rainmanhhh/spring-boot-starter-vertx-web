@@ -16,7 +16,7 @@ import lombok.Data;
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".error-handler")
 public class ErrorHandlerConfiguration extends AbstractHandlerConfiguration {
-    private Integer order = 1300;
+    private Integer order = 1200;
     private final String handler = null;
     private final String errorHandler = ErrorHandler.class.getCanonicalName();
 
