@@ -24,6 +24,7 @@ public class CorsHandlerConfiguration extends AbstractHandlerConfiguration {
     private Integer order = -900;
 
     /**
+     * regex pattern for http response header AllowedOrigin, or `*`;
      * if set to `*`, {@link #allowCredentials} cannot be true
      */
     private String allowedOriginPattern = "*";
@@ -35,9 +36,9 @@ public class CorsHandlerConfiguration extends AbstractHandlerConfiguration {
      */
     private boolean allowCredentials = false;
     /**
-     * default value is -1(means no max age limit)
+     * default value is 0(greater than 0 means valid)
      */
-    private int maxAgeSeconds = -1;
+    private int maxAgeSeconds = 0;
 
     @Lazy
     @ConditionalOnMissingBean(CorsHandler.class)
@@ -47,6 +48,7 @@ public class CorsHandlerConfiguration extends AbstractHandlerConfiguration {
         if (allowedMethods != null) handler.allowedMethods(allowedMethods);
         if (allowedHeaders != null) handler.allowedHeaders(allowedHeaders);
         if (exposedHeaders != null) handler.exposedHeaders(exposedHeaders);
+        if (maxAgeSeconds > 0) handler.maxAgeSeconds(maxAgeSeconds);
         return handler.allowCredentials(allowCredentials);
     }
 }
