@@ -2,29 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.rainmanhhh</groupId>
-    <artifactId>spring-boot-starter-vertx-web</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
-    <name>spring-boot-starter-vertx-web</name>
-
-    <properties>
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <vertxVersion>3.7.0</vertxVersion>
-        <springBootVersion>2.1.4.RELEASE</springBootVersion>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.github.rainmanhhh</groupId>
-            <artifactId>spring-boot-starter-vertx</artifactId>
+            <artifactId>spring-boot-starter-vertx-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -36,73 +18,13 @@
             <artifactId>vertx-web</artifactId>
             <version>${vertxVersion}</version>
         </dependency>
-        <dependency>
-            <artifactId>jsr305</artifactId>
-            <groupId>com.google.code.findbugs</groupId>
-            <scope>provided</scope>
-            <version>3.0.2</version>
-        </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <!-- Import dependency management from Spring Boot -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springBootVersion}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springBootVersion}</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <repositories>
-        <repository>
-            <id>jitpack</id>
-            <name>jitpack</name>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-boot-starter-vertx-web</artifactId>
+    <name>spring-boot-starter-vertx-web</name>
+    <parent>
+        <artifactId>spring-boot-starter-vertx-parent</artifactId>
+        <groupId>com.github.rainmanhhh</groupId>
+        <version>0.0.8</version>
+    </parent>
 </project>
