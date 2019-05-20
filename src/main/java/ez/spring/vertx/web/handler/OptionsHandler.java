@@ -9,9 +9,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.RoutingContext;
-import lombok.Data;
 
-@Data
 public class OptionsHandler implements Handler<RoutingContext> {
     private final String allow;
 
@@ -33,5 +31,9 @@ public class OptionsHandler implements Handler<RoutingContext> {
                 .setStatusCode(HttpResponseStatus.NO_CONTENT.code())
                 .putHeader(HttpHeaders.ALLOW, allow)
                 .end();
+    }
+
+    public String getAllow() {
+        return allow;
     }
 }

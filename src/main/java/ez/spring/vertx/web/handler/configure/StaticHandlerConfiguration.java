@@ -15,10 +15,8 @@ import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.Http2PushMapping;
 import io.vertx.ext.web.handler.StaticHandler;
-import lombok.Data;
 
 @Lazy
-@Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".static-handler")
 public class StaticHandlerConfiguration extends AbstractHandlerConfiguration {
@@ -123,5 +121,228 @@ public class StaticHandlerConfiguration extends AbstractHandlerConfiguration {
                 .skipCompressionForMediaTypes(getSkipCompressionForMediaTypes())
                 .skipCompressionForSuffixes(getSkipCompressionForSuffixes())
                 ;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public StaticHandlerConfiguration setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
+    @Override
+    public Integer getOrder() {
+        return order;
+    }
+
+    @Override
+    public StaticHandlerConfiguration setOrder(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    @Override
+    public String getHandler() {
+        return handler;
+    }
+
+    public StaticHandlerConfiguration setHandler(String handler) {
+        this.handler = handler;
+        return this;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public StaticHandlerConfiguration setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public String getWebRoot() {
+        return webRoot;
+    }
+
+    public StaticHandlerConfiguration setWebRoot(String webRoot) {
+        this.webRoot = webRoot;
+        return this;
+    }
+
+    public boolean isAllowRootFileSystemAccess() {
+        return allowRootFileSystemAccess;
+    }
+
+    public StaticHandlerConfiguration setAllowRootFileSystemAccess(boolean allowRootFileSystemAccess) {
+        this.allowRootFileSystemAccess = allowRootFileSystemAccess;
+        return this;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public StaticHandlerConfiguration setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+        return this;
+    }
+
+    public long getMaxAgeSeconds() {
+        return maxAgeSeconds;
+    }
+
+    public StaticHandlerConfiguration setMaxAgeSeconds(long maxAgeSeconds) {
+        this.maxAgeSeconds = maxAgeSeconds;
+        return this;
+    }
+
+    public boolean isCachingEnabled() {
+        return cachingEnabled;
+    }
+
+    public StaticHandlerConfiguration setCachingEnabled(boolean cachingEnabled) {
+        this.cachingEnabled = cachingEnabled;
+        return this;
+    }
+
+    public boolean isDirectoryListing() {
+        return directoryListing;
+    }
+
+    public StaticHandlerConfiguration setDirectoryListing(boolean directoryListing) {
+        this.directoryListing = directoryListing;
+        return this;
+    }
+
+    public boolean isIncludeHidden() {
+        return includeHidden;
+    }
+
+    public StaticHandlerConfiguration setIncludeHidden(boolean includeHidden) {
+        this.includeHidden = includeHidden;
+        return this;
+    }
+
+    public long getCacheEntryTimeout() {
+        return cacheEntryTimeout;
+    }
+
+    public StaticHandlerConfiguration setCacheEntryTimeout(long cacheEntryTimeout) {
+        this.cacheEntryTimeout = cacheEntryTimeout;
+        return this;
+    }
+
+    public String getIndexPage() {
+        return indexPage;
+    }
+
+    public StaticHandlerConfiguration setIndexPage(String indexPage) {
+        this.indexPage = indexPage;
+        return this;
+    }
+
+    public int getMaxCacheSize() {
+        return maxCacheSize;
+    }
+
+    public StaticHandlerConfiguration setMaxCacheSize(int maxCacheSize) {
+        this.maxCacheSize = maxCacheSize;
+        return this;
+    }
+
+    public List<Http2PushMapping> getHttp2PushMappings() {
+        return http2PushMappings;
+    }
+
+    public StaticHandlerConfiguration setHttp2PushMappings(List<Http2PushMapping> http2PushMappings) {
+        this.http2PushMappings = http2PushMappings;
+        return this;
+    }
+
+    public Set<String> getSkipCompressionForMediaTypes() {
+        return skipCompressionForMediaTypes;
+    }
+
+    public StaticHandlerConfiguration setSkipCompressionForMediaTypes(Set<String> skipCompressionForMediaTypes) {
+        this.skipCompressionForMediaTypes = skipCompressionForMediaTypes;
+        return this;
+    }
+
+    public Set<String> getSkipCompressionForSuffixes() {
+        return skipCompressionForSuffixes;
+    }
+
+    public StaticHandlerConfiguration setSkipCompressionForSuffixes(Set<String> skipCompressionForSuffixes) {
+        this.skipCompressionForSuffixes = skipCompressionForSuffixes;
+        return this;
+    }
+
+    public boolean isAlwaysAsyncFS() {
+        return alwaysAsyncFS;
+    }
+
+    public StaticHandlerConfiguration setAlwaysAsyncFS(boolean alwaysAsyncFS) {
+        this.alwaysAsyncFS = alwaysAsyncFS;
+        return this;
+    }
+
+    public boolean isEnableFSTuning() {
+        return enableFSTuning;
+    }
+
+    public StaticHandlerConfiguration setEnableFSTuning(boolean enableFSTuning) {
+        this.enableFSTuning = enableFSTuning;
+        return this;
+    }
+
+    public long getMaxAvgServeTimeNanoSeconds() {
+        return maxAvgServeTimeNanoSeconds;
+    }
+
+    public StaticHandlerConfiguration setMaxAvgServeTimeNanoSeconds(long maxAvgServeTimeNanoSeconds) {
+        this.maxAvgServeTimeNanoSeconds = maxAvgServeTimeNanoSeconds;
+        return this;
+    }
+
+    public String getDirectoryTemplate() {
+        return directoryTemplate;
+    }
+
+    public StaticHandlerConfiguration setDirectoryTemplate(String directoryTemplate) {
+        this.directoryTemplate = directoryTemplate;
+        return this;
+    }
+
+    public boolean isEnableRangeSupport() {
+        return enableRangeSupport;
+    }
+
+    public StaticHandlerConfiguration setEnableRangeSupport(boolean enableRangeSupport) {
+        this.enableRangeSupport = enableRangeSupport;
+        return this;
+    }
+
+    public boolean isVaryHeader() {
+        return varyHeader;
+    }
+
+    public StaticHandlerConfiguration setVaryHeader(boolean varyHeader) {
+        this.varyHeader = varyHeader;
+        return this;
+    }
+
+    public String getDefaultContentEncoding() {
+        return defaultContentEncoding;
+    }
+
+    public StaticHandlerConfiguration setDefaultContentEncoding(String defaultContentEncoding) {
+        this.defaultContentEncoding = defaultContentEncoding;
+        return this;
     }
 }

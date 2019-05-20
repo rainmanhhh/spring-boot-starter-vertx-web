@@ -1,3 +1,14 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  ez.spring.vertx.web.VertxWebConfiguration
+  ez.spring.vertx.web.VertxWebConfiguration,\
+  ez.spring.vertx.web.handler.configure.BodyHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.CorsHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.ErrorHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.ErrorLogHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.FaviconHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.LoggerHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.StaticHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.TimeoutHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.CookieHandlerConfiguration,\
+  ez.spring.vertx.web.handler.configure.SessionHandlerConfiguration,\
+  ez.spring.vertx.web.verticle.HttpServerVerticleConfiguration

@@ -9,10 +9,8 @@ import org.springframework.context.annotation.Lazy;
 import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.handler.TimeoutHandler;
-import lombok.Data;
 
 @Lazy
-@Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".timeout-handler")
 public class TimeoutHandlerConfiguration extends AbstractHandlerConfiguration {
@@ -36,4 +34,53 @@ public class TimeoutHandlerConfiguration extends AbstractHandlerConfiguration {
         return TimeoutHandler.create(getTimeout(), getErrorCode());
     }
 
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public TimeoutHandlerConfiguration setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
+    @Override
+    public Integer getOrder() {
+        return order;
+    }
+
+    @Override
+    public TimeoutHandlerConfiguration setOrder(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    @Override
+    public String getHandler() {
+        return handler;
+    }
+
+    public TimeoutHandlerConfiguration setHandler(String handler) {
+        this.handler = handler;
+        return this;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public TimeoutHandlerConfiguration setTimeout(long timeout) {
+        this.timeout = timeout;
+        return this;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public TimeoutHandlerConfiguration setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+        return this;
+    }
 }

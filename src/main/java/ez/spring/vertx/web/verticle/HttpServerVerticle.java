@@ -1,5 +1,7 @@
 package ez.spring.vertx.web.verticle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Collections;
@@ -12,16 +14,11 @@ import io.vertx.core.Future;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class HttpServerVerticle extends AbstractVerticle {
+    private static final Logger log = LoggerFactory.getLogger(HttpServerVerticle.class);
     private final HttpServerOptions httpServerOptions;
     private final RouteMapper routeMapper;
-    @Getter
-    @Setter
     private List<RouteProps> routes = Collections.emptyList();
     private HttpServer httpServer = null;
 
@@ -32,6 +29,15 @@ public class HttpServerVerticle extends AbstractVerticle {
     ) {
         this.httpServerOptions = httpServerOptions;
         this.routeMapper = new RouteMapper(applicationContext, router);
+    }
+
+    public List<RouteProps> getRoutes() {
+        return routes;
+    }
+
+    public HttpServerVerticle setRoutes(List<RouteProps> routes) {
+        this.routes = routes;
+        return this;
     }
 
     @Override

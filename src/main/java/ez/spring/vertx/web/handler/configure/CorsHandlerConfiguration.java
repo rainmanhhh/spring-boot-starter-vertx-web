@@ -11,12 +11,8 @@ import java.util.Set;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.handler.CorsHandler;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Lazy
-@Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".cors-handler")
 public class CorsHandlerConfiguration extends AbstractHandlerConfiguration {
@@ -50,5 +46,80 @@ public class CorsHandlerConfiguration extends AbstractHandlerConfiguration {
         if (exposedHeaders != null) handler.exposedHeaders(exposedHeaders);
         if (maxAgeSeconds > 0) handler.maxAgeSeconds(maxAgeSeconds);
         return handler.allowCredentials(allowCredentials);
+    }
+
+    @Override
+    public String getHandler() {
+        return handler;
+    }
+
+    public CorsHandlerConfiguration setHandler(String handler) {
+        this.handler = handler;
+        return this;
+    }
+
+    @Override
+    public Integer getOrder() {
+        return order;
+    }
+
+    @Override
+    public CorsHandlerConfiguration setOrder(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    public String getAllowedOriginPattern() {
+        return allowedOriginPattern;
+    }
+
+    public CorsHandlerConfiguration setAllowedOriginPattern(String allowedOriginPattern) {
+        this.allowedOriginPattern = allowedOriginPattern;
+        return this;
+    }
+
+    public Set<HttpMethod> getAllowedMethods() {
+        return allowedMethods;
+    }
+
+    public CorsHandlerConfiguration setAllowedMethods(Set<HttpMethod> allowedMethods) {
+        this.allowedMethods = allowedMethods;
+        return this;
+    }
+
+    public Set<String> getAllowedHeaders() {
+        return allowedHeaders;
+    }
+
+    public CorsHandlerConfiguration setAllowedHeaders(Set<String> allowedHeaders) {
+        this.allowedHeaders = allowedHeaders;
+        return this;
+    }
+
+    public Set<String> getExposedHeaders() {
+        return exposedHeaders;
+    }
+
+    public CorsHandlerConfiguration setExposedHeaders(Set<String> exposedHeaders) {
+        this.exposedHeaders = exposedHeaders;
+        return this;
+    }
+
+    public boolean isAllowCredentials() {
+        return allowCredentials;
+    }
+
+    public CorsHandlerConfiguration setAllowCredentials(boolean allowCredentials) {
+        this.allowCredentials = allowCredentials;
+        return this;
+    }
+
+    public int getMaxAgeSeconds() {
+        return maxAgeSeconds;
+    }
+
+    public CorsHandlerConfiguration setMaxAgeSeconds(int maxAgeSeconds) {
+        this.maxAgeSeconds = maxAgeSeconds;
+        return this;
     }
 }

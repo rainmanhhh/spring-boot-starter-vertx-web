@@ -9,17 +9,14 @@ import org.springframework.context.annotation.Lazy;
 import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.handler.ErrorHandler;
-import lombok.Data;
 
 @Lazy
-@Data
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".error-handler")
 public class ErrorHandlerConfiguration extends AbstractHandlerConfiguration {
-    private Integer order = 1200;
     private final String handler = null;
     private final String errorHandler = ErrorHandler.class.getCanonicalName();
-
+    private Integer order = 1200;
     /**
      * @see ErrorHandler#DEFAULT_ERROR_HANDLER_TEMPLATE
      */
@@ -31,5 +28,44 @@ public class ErrorHandlerConfiguration extends AbstractHandlerConfiguration {
     @Bean
     public ErrorHandler errorHandler() {
         return ErrorHandler.create(getErrorTemplateName(), isDisplayExceptionDetails());
+    }
+
+    @Override
+    public Integer getOrder() {
+        return order;
+    }
+
+    @Override
+    public ErrorHandlerConfiguration setOrder(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    @Override
+    public String getHandler() {
+        return handler;
+    }
+
+    @Override
+    public String getErrorHandler() {
+        return errorHandler;
+    }
+
+    public String getErrorTemplateName() {
+        return errorTemplateName;
+    }
+
+    public ErrorHandlerConfiguration setErrorTemplateName(String errorTemplateName) {
+        this.errorTemplateName = errorTemplateName;
+        return this;
+    }
+
+    public boolean isDisplayExceptionDetails() {
+        return displayExceptionDetails;
+    }
+
+    public ErrorHandlerConfiguration setDisplayExceptionDetails(boolean displayExceptionDetails) {
+        this.displayExceptionDetails = displayExceptionDetails;
+        return this;
     }
 }

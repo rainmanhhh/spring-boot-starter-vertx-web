@@ -15,10 +15,8 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
-import lombok.Data;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-@Data
 public abstract class WebHandler<Request, Response> implements Handler<RoutingContext> {
     private final Class<Request> requestClass;
     @Nullable
@@ -70,6 +68,38 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
     }
 
     public abstract CompletionStage<Response> exec(@Nullable Request request) throws Throwable;
+
+    public Class<Request> getRequestClass() {
+        return requestClass;
+    }
+
+    @Nullable
+    public RequestReader<Request> getRequestReader() {
+        return requestReader;
+    }
+
+    public WebHandler<Request, Response> setRequestReader(@Nullable RequestReader<Request> requestReader) {
+        this.requestReader = requestReader;
+        return this;
+    }
+
+    public ResponseWriter<Response> getResponseWriter() {
+        return responseWriter;
+    }
+
+    public WebHandler<Request, Response> setResponseWriter(ResponseWriter<Response> responseWriter) {
+        this.responseWriter = responseWriter;
+        return this;
+    }
+
+    public boolean isWithOptionsHandler() {
+        return withOptionsHandler;
+    }
+
+    public WebHandler<Request, Response> setWithOptionsHandler(boolean withOptionsHandler) {
+        this.withOptionsHandler = withOptionsHandler;
+        return this;
+    }
 
     public enum KnownError {
         DECODE_REQUEST_FAILED(HttpResponseStatus.BAD_REQUEST);

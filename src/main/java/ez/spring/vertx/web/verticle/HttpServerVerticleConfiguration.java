@@ -24,14 +24,11 @@ import ez.spring.vertx.web.route.RouteProps;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Import(HttpServerConfiguration.class)
 @Configuration
 @ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE)
-@Data
+
 public class HttpServerVerticleConfiguration {
     static final String HTTP_SERVER_VERTICLE = VertxWebConfiguration.PREFIX + ".http-server-verticle";
 
@@ -42,9 +39,8 @@ public class HttpServerVerticleConfiguration {
     @Qualifier(HTTP_SERVER_VERTICLE)
     @Bean
     public VerticleDeploy httpServerVerticleDeploy(HttpServerVerticleConfiguration props) {
-        return new VerticleDeploy(props.getDeploy()).setDescriptor(
-                HttpServerVerticle.class.getCanonicalName()
-        );
+        return new VerticleDeploy(props.getDeploy())
+                .setDescriptor(getClass().getCanonicalName());
     }
 
     @Lazy
@@ -97,5 +93,23 @@ public class HttpServerVerticleConfiguration {
                 .setHandler(hc.getHandler())
                 .setErrorHandler(hc.getErrorHandler())
                 .setWithOptionsHandler(hc.isWithOptionsHandler());
+    }
+
+    public DeploymentOptionsEx getDeploy() {
+        return deploy;
+    }
+
+    public HttpServerVerticleConfiguration setDeploy(DeploymentOptionsEx deploy) {
+        this.deploy = deploy;
+        return this;
+    }
+
+    public List<RouteProps> getRoutes() {
+        return routes;
+    }
+
+    public HttpServerVerticleConfiguration setRoutes(List<RouteProps> routes) {
+        this.routes = routes;
+        return this;
     }
 }
