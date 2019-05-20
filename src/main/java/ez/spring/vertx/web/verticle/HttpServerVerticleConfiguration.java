@@ -38,9 +38,9 @@ public class HttpServerVerticleConfiguration {
 
     @Qualifier(HTTP_SERVER_VERTICLE)
     @Bean
-    public VerticleDeploy httpServerVerticleDeploy(HttpServerVerticleConfiguration props) {
-        return new VerticleDeploy(props.getDeploy())
-                .setDescriptor(getClass().getCanonicalName());
+    public VerticleDeploy httpServerVerticleDeploy(HttpServerVerticleConfiguration configuration) {
+        return new VerticleDeploy(configuration.getDeploy())
+                .setDescriptor(HttpServerVerticle.class.getCanonicalName());
     }
 
     @Lazy
