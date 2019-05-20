@@ -1,6 +1,7 @@
 package ez.spring.vertx.web.handler.configure;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,7 @@ import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.SessionStore;
 
 @Lazy
-@Import(VertxConfiguration.class)
+@Import({VertxConfiguration.class, VertxWebConfiguration.class})
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".session-handler")
 @Configuration
 public class SessionHandlerConfiguration extends AbstractHandlerConfiguration {
@@ -57,6 +58,8 @@ public class SessionHandlerConfiguration extends AbstractHandlerConfiguration {
     @NestedConfigurationProperty
     private ClusteredStoreProps clusteredStore = null;
 
+    @Lazy
+    @ConditionalOnMissingBean(SessionHandler.class)
     @Bean
     public SessionHandler sessionHandler(
             SessionStore sessionStore,
