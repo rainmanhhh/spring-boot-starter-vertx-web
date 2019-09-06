@@ -5,9 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * request reader for url querystring. eg: decode "a=1&b=str" to {a:1, b:"str"}
+ * @param <Request>
+ */
 @SuppressWarnings("unused")
 public class QsRequestReader<Request> implements RequestReader<Request> {
     private final Class<Request> requestClass;

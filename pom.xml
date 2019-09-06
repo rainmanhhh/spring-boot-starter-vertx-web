@@ -14,13 +14,19 @@
             <groupId>io.vertx</groupId>
             <version>${vertxVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-client</artifactId>
+            <version>${vertxVersion}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <modelVersion>4.0.0</modelVersion>
     <name>spring-boot-starter-vertx-web</name>
     <parent>
         <artifactId>spring-boot-starter-vertx-parent</artifactId>
         <groupId>com.github.rainmanhhh</groupId>
-        <version>0.0.10</version>
+        <version>0.0.11</version>
     </parent>
     <repositories>
         <repository>

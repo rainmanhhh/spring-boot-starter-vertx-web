@@ -5,6 +5,10 @@ import org.springframework.lang.Nullable;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * request reader for json body. eg: decode `{a:1, b:"cde"}` to {a:1, b:"cde"}
+ * @param <Request>
+ */
 @SuppressWarnings("WeakerAccess")
 public class JsonBodyRequestReader<Request> implements RequestReader<Request> {
     private final Class<Request> requestClass;

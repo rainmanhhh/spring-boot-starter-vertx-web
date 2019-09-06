@@ -1,0 +1,9 @@
+vertx:
+  web:
+    http-server-verticle:
+      deploy:
+        enabled: true
+      routes:
+        - path: /
+          handler: ez.spring.vertx.web.TestWebHandler
+          method: post

@@ -4,4 +4,25 @@ import io.vertx.ext.web.RoutingContext;
 
 public interface RequestReader<Request> {
     Request readRequest(RoutingContext context) throws Throwable;
+
+    /**
+     * @param requestClass decoded request class
+     * @param <Request> decoded request class
+     * @return requestReader
+     * @see JsonBodyRequestReader
+     */
+    static <Request> JsonBodyRequestReader<Request> jsonBody(Class<Request> requestClass) {
+        return new JsonBodyRequestReader<>(requestClass);
+    }
+
+    /**
+     *
+     * @param requestClass decoded request class
+     * @param <Request> decoded request class
+     * @return requestReader
+     * @see QsRequestReader
+     */
+    static <Request> QsRequestReader<Request> qs(Class<Request> requestClass) {
+        return new QsRequestReader<>(requestClass);
+    }
 }

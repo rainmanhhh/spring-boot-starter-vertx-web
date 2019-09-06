@@ -1,61 +1,41 @@
 package ez.spring.vertx.web.handler;
 
-import org.springframework.lang.Nullable;
-
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.CompletionStage;
-
-import ez.spring.vertx.util.EzUtil;
-import ez.spring.vertx.web.handler.request.JsonBodyRequestReader;
-import ez.spring.vertx.web.handler.request.QsRequestReader;
 import ez.spring.vertx.web.handler.request.RequestReader;
-import ez.spring.vertx.web.handler.response.JsonResponseWriter;
 import ez.spring.vertx.web.handler.response.ResponseWriter;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
+import org.springframework.lang.Nullable;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class WebHandler<Request, Response> implements Handler<RoutingContext> {
-    private final Class<Request> requestClass;
-    @Nullable
-    private RequestReader<Request> requestReader;
-    private ResponseWriter<Response> responseWriter;
     private boolean withOptionsHandler = true;
 
-    protected WebHandler() {
-        requestClass = EzUtil.parameterizedTypes(WebHandler.class, this.getClass()).get(0);
-        requestReader = requestClass == Void.class ? null : new JsonBodyRequestReader<>(requestClass);
-        responseWriter = new JsonResponseWriter<>();
-    }
-
     @Override
-    public final void handle(RoutingContext event) {
+    public final void handle(RoutingContext routingContext) {
+        final RequestReader<Request> requestReader = getRequestReader();
+        final ResponseWriter<Response> responseWriter = getResponseWriter();
         final Request request;
         try {
-            request = requestReader == null ? null : requestReader.readRequest(event);
+            request = requestReader == null ? null : requestReader.readRequest(routingContext);
         } catch (Throwable err) {
-            fail(event, KnownError.DECODE_REQUEST_FAILED.error(err));
+            KnownError.DECODE_REQUEST_FAILED.doFail(routingContext, err);
+            fail(routingContext, KnownError.DECODE_REQUEST_FAILED.wrap(err));
             return;
         }
         try {
-            CompletionStage<Response> responseFuture = exec(request);
-            responseFuture.thenAccept(response ->
-                    responseWriter.writeResponse(event, response)
-            ).exceptionally(throwable -> {
-                if (throwable instanceof CompletionException)
-                    fail(event, throwable.getCause());
-                else
-                    fail(event, throwable);
-                return null;
+            exec(request).setHandler(r -> {
+                if (r.succeeded()) responseWriter.writeResponse(routingContext, r.result());
+                else fail(routingContext, r.cause());
             });
         } catch (Throwable err) {
-            fail(event, err);
+            fail(routingContext, err);
         }
     }
 
-    private void fail(RoutingContext context, Throwable err) {
+    private static void fail(RoutingContext context, Throwable err) {
         if (err instanceof HttpStatusException) {
             HttpStatusException statusException = (HttpStatusException) err;
             context.response().setStatusMessage(statusException.getPayload());
@@ -63,34 +43,12 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         } else context.fail(err);
     }
 
-    public WebHandler<Request, Response> useQs() {
-        return setRequestReader(new QsRequestReader<>(requestClass));
-    }
-
-    public abstract CompletionStage<Response> exec(@Nullable Request request) throws Throwable;
-
-    public Class<Request> getRequestClass() {
-        return requestClass;
-    }
+    public abstract Future<Response> exec(@Nullable Request request) throws Throwable;
 
     @Nullable
-    public RequestReader<Request> getRequestReader() {
-        return requestReader;
-    }
+    abstract public RequestReader<Request> getRequestReader();
 
-    public WebHandler<Request, Response> setRequestReader(@Nullable RequestReader<Request> requestReader) {
-        this.requestReader = requestReader;
-        return this;
-    }
-
-    public ResponseWriter<Response> getResponseWriter() {
-        return responseWriter;
-    }
-
-    public WebHandler<Request, Response> setResponseWriter(ResponseWriter<Response> responseWriter) {
-        this.responseWriter = responseWriter;
-        return this;
-    }
+    abstract public ResponseWriter<Response> getResponseWriter();
 
     public boolean isWithOptionsHandler() {
         return withOptionsHandler;
@@ -111,12 +69,16 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
             ex = new HttpStatusException(status.code(), name());
         }
 
-        public HttpStatusException error(Throwable cause) {
+        public HttpStatusException wrap(@Nullable Throwable cause) {
             return cause == null ? ex : new HttpStatusException(status.code(), name());
         }
 
-        public HttpStatusException error() {
-            return error(null);
+        public HttpStatusException wrap() {
+            return wrap(null);
+        }
+
+        public void doFail(RoutingContext routingContext, @Nullable Throwable cause) {
+            WebHandler.fail(routingContext, wrap(cause));
         }
     }
 }
