@@ -1,14 +1,5 @@
 package ez.spring.vertx.web.route;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import ez.spring.vertx.Beans;
 import ez.spring.vertx.web.handler.OptionsHandler;
 import ez.spring.vertx.web.handler.WebHandler;
@@ -18,15 +9,20 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class RouteMapper {
     private static final Logger log = LoggerFactory.getLogger(RouteMapper.class);
-    private final ApplicationContext applicationContext;
     private final Router router;
     private List<RouteProps> routePropsList = Collections.emptyList();
 
-    public RouteMapper(ApplicationContext applicationContext, Router router) {
-        this.applicationContext = applicationContext;
+    public RouteMapper(Router router) {
         this.router = router;
     }
 
@@ -98,10 +94,6 @@ public class RouteMapper {
                 route.method(method);
             }
         }
-    }
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 
     public Router getRouter() {

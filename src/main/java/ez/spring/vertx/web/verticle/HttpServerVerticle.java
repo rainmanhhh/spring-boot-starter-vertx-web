@@ -1,34 +1,34 @@
 package ez.spring.vertx.web.verticle;
 
+import ez.spring.vertx.web.route.RouteMapper;
+import ez.spring.vertx.web.route.RouteProps;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Promise;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.Json;
+import io.vertx.ext.web.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.lang.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-import ez.spring.vertx.web.route.RouteMapper;
-import ez.spring.vertx.web.route.RouteProps;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerOptions;
-import io.vertx.ext.web.Router;
-
 public class HttpServerVerticle extends AbstractVerticle {
     private static final Logger log = LoggerFactory.getLogger(HttpServerVerticle.class);
     private final HttpServerOptions httpServerOptions;
-    private final RouteMapper routeMapper;
+    private RouteMapper routeMapper;
     private List<RouteProps> routes = Collections.emptyList();
     private HttpServer httpServer = null;
 
-    public HttpServerVerticle(
-            ApplicationContext applicationContext,
-            HttpServerOptions httpServerOptions,
-            Router router
-    ) {
+    public HttpServerVerticle(HttpServerOptions httpServerOptions) {
         this.httpServerOptions = httpServerOptions;
-        this.routeMapper = new RouteMapper(applicationContext, router);
+    }
+
+    @Nullable
+    public RouteMapper getRouteMapper() {
+        return routeMapper;
     }
 
     public List<RouteProps> getRoutes() {
@@ -40,36 +40,37 @@ public class HttpServerVerticle extends AbstractVerticle {
         return this;
     }
 
+    @Nullable
+    public HttpServer getHttpServer() {
+        return httpServer;
+    }
+
     @Override
-    public void start(Future<Void> startFuture) {
-        routeMapper.setRoutePropsList(routes);
+    public void start(Promise<Void> startPromise) {
         httpServer = vertx.createHttpServer(httpServerOptions);
+        routeMapper = new RouteMapper(Router.router(vertx));
+        routeMapper.setRoutePropsList(routes);
         httpServer.requestHandler(
                 routeMapper.map()
         ).listen(event -> {
             if (event.succeeded()) {
-                log.info("httpServer listening at {}:{}",
-                        httpServerOptions.getHost(), event.result().actualPort());
-                startFuture.complete();
+                log.info("httpServer listening at {}:{}", httpServerOptions.getHost(), event.result().actualPort());
+                startPromise.complete();
             } else {
-                startFuture.fail(new RuntimeException(
-                        "httpServer listen failed! options: "
-                                + httpServerOptions.toJson().encodePrettily(),
-                        event.cause()
-                ));
+                log.error("httpServer start failed, options: {}", Json.encodePrettily(httpServerOptions));
+                startPromise.fail(event.cause());
             }
         });
     }
 
     @Override
-    public void stop(Future<Void> stopFuture) {
+    public void stop(Promise<Void> stopPromise) {
         if (httpServer != null) {
             httpServer.close(event -> {
                 if (event.succeeded()) {
-                    log.info("httpServer at {}:{} stopped",
-                            httpServerOptions.getHost(), httpServer.actualPort());
-                    stopFuture.complete();
-                } else stopFuture.fail(event.cause());
+                    log.info("httpServer at {} stopped", httpServer.actualPort());
+                    stopPromise.complete();
+                } else stopPromise.fail(event.cause());
             });
         }
     }

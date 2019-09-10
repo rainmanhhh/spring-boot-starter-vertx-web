@@ -1,7 +1,7 @@
 package ez.spring.vertx.web;
 
 import ez.spring.vertx.EzJob;
-import ez.spring.vertx.httpServer.HttpServerConfiguration;
+import ez.spring.vertx.http.HttpServerConfiguration;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
