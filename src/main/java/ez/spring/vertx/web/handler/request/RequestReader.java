@@ -3,11 +3,9 @@ package ez.spring.vertx.web.handler.request;
 import io.vertx.ext.web.RoutingContext;
 
 public interface RequestReader<Request> {
-    Request readRequest(RoutingContext context) throws Throwable;
-
     /**
      * @param requestClass decoded request class
-     * @param <Request> decoded request class
+     * @param <Request>    decoded request class
      * @return requestReader
      * @see JsonBodyRequestReader
      */
@@ -16,13 +14,14 @@ public interface RequestReader<Request> {
     }
 
     /**
-     *
      * @param requestClass decoded request class
-     * @param <Request> decoded request class
+     * @param <Request>    decoded request class
      * @return requestReader
      * @see QsRequestReader
      */
     static <Request> QsRequestReader<Request> qs(Class<Request> requestClass) {
         return new QsRequestReader<>(requestClass);
     }
+
+    Request readRequest(RoutingContext context) throws Throwable;
 }

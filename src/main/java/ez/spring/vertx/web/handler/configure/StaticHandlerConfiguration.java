@@ -1,5 +1,9 @@
 package ez.spring.vertx.web.handler.configure;
 
+import ez.spring.vertx.ActiveProfiles;
+import ez.spring.vertx.web.VertxWebConfiguration;
+import io.vertx.ext.web.Http2PushMapping;
+import io.vertx.ext.web.handler.StaticHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import ez.spring.vertx.ActiveProfiles;
-import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.ext.web.Http2PushMapping;
-import io.vertx.ext.web.handler.StaticHandler;
 
 @Lazy
 @Configuration

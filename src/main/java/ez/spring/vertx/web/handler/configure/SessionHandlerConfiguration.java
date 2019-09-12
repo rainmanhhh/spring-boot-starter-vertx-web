@@ -1,5 +1,12 @@
 package ez.spring.vertx.web.handler.configure;
 
+import ez.spring.vertx.VertxConfiguration;
+import ez.spring.vertx.web.VertxWebConfiguration;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.AuthProvider;
+import io.vertx.ext.web.handler.SessionHandler;
+import io.vertx.ext.web.sstore.SessionStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,14 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
-
-import ez.spring.vertx.VertxConfiguration;
-import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.auth.AuthProvider;
-import io.vertx.ext.web.handler.SessionHandler;
-import io.vertx.ext.web.sstore.SessionStore;
 
 @Lazy
 @Import({VertxConfiguration.class, VertxWebConfiguration.class})

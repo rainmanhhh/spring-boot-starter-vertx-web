@@ -1,5 +1,8 @@
 package ez.spring.vertx.web.handler.configure;
 
+import ez.spring.vertx.web.VertxWebConfiguration;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.handler.CorsHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -7,10 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 import java.util.Set;
-
-import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.core.http.HttpMethod;
-import io.vertx.ext.web.handler.CorsHandler;
 
 @Lazy
 @Configuration

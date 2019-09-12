@@ -9,6 +9,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   ez.spring.vertx.web.handler.configure.LoggerHandlerConfiguration,\
   ez.spring.vertx.web.handler.configure.StaticHandlerConfiguration,\
   ez.spring.vertx.web.handler.configure.TimeoutHandlerConfiguration,\
-  ez.spring.vertx.web.handler.configure.CookieHandlerConfiguration,\
   ez.spring.vertx.web.handler.configure.SessionHandlerConfiguration,\
   ez.spring.vertx.web.verticle.HttpServerVerticleConfiguration

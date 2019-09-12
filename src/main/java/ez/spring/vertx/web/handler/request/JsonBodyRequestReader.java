@@ -1,12 +1,12 @@
 package ez.spring.vertx.web.handler.request;
 
-import org.springframework.lang.Nullable;
-
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.lang.Nullable;
 
 /**
  * request reader for json body. eg: decode `{a:1, b:"cde"}` to {a:1, b:"cde"}
+ *
  * @param <Request>
  */
 @SuppressWarnings("WeakerAccess")

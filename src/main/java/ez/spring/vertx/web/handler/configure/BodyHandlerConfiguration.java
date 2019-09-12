@@ -1,5 +1,8 @@
 package ez.spring.vertx.web.handler.configure;
 
+import ez.spring.vertx.web.VertxWebConfiguration;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.handler.BodyHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -9,10 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.core.http.HttpMethod;
-import io.vertx.ext.web.handler.BodyHandler;
 
 @Lazy
 @Configuration

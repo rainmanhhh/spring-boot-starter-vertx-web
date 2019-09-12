@@ -1,14 +1,13 @@
 package ez.spring.vertx.web;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-
 import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.VertxConfiguration;
 import ez.spring.vertx.web.handler.OkHandler;
 import io.vertx.ext.web.common.WebEnvironment;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * when this config init, {@link WebEnvironment#mode()} value will be set

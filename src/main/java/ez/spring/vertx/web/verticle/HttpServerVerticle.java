@@ -1,13 +1,12 @@
 package ez.spring.vertx.web.verticle;
 
-import ez.spring.vertx.web.route.RouteMapper;
+import ez.spring.vertx.web.route.EzRouter;
 import ez.spring.vertx.web.route.RouteProps;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.Json;
-import io.vertx.ext.web.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
@@ -15,10 +14,11 @@ import org.springframework.lang.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public class HttpServerVerticle extends AbstractVerticle {
     private static final Logger log = LoggerFactory.getLogger(HttpServerVerticle.class);
     private final HttpServerOptions httpServerOptions;
-    private RouteMapper routeMapper;
+    private EzRouter ezRouter;
     private List<RouteProps> routes = Collections.emptyList();
     private HttpServer httpServer = null;
 
@@ -27,8 +27,8 @@ public class HttpServerVerticle extends AbstractVerticle {
     }
 
     @Nullable
-    public RouteMapper getRouteMapper() {
-        return routeMapper;
+    public EzRouter getEzRouter() {
+        return ezRouter;
     }
 
     public List<RouteProps> getRoutes() {
@@ -48,11 +48,8 @@ public class HttpServerVerticle extends AbstractVerticle {
     @Override
     public void start(Promise<Void> startPromise) {
         httpServer = vertx.createHttpServer(httpServerOptions);
-        routeMapper = new RouteMapper(Router.router(vertx));
-        routeMapper.setRoutePropsList(routes);
-        httpServer.requestHandler(
-                routeMapper.map()
-        ).listen(event -> {
+        ezRouter = EzRouter.router(routes);
+        httpServer.requestHandler(ezRouter).listen(event -> {
             if (event.succeeded()) {
                 log.info("httpServer listening at {}:{}", httpServerOptions.getHost(), event.result().actualPort());
                 startPromise.complete();

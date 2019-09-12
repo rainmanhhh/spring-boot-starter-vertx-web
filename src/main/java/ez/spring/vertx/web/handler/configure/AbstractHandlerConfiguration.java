@@ -1,8 +1,8 @@
 package ez.spring.vertx.web.handler.configure;
 
-import java.util.Set;
-
 import io.vertx.core.http.HttpMethod;
+
+import java.util.Set;
 
 /**
  * orders:<br>
@@ -10,7 +10,6 @@ import io.vertx.core.http.HttpMethod;
  * {@link CorsHandlerConfiguration}: -900;<br>
  * {@link LoggerHandlerConfiguration}: -800;<br>
  * {@link ErrorLogHandlerConfiguration}: -700;<br>
- * {@link CookieHandlerConfiguration}: -600;<br>
  * {@link SessionHandlerConfiguration}: -500;<br>
  * {@link BodyHandlerConfiguration}: -400;<br>
  * {@link FaviconHandlerConfiguration}: 1000;<br>

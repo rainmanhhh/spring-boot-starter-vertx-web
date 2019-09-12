@@ -9,9 +9,17 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
 import org.springframework.lang.Nullable;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({"unused"})
 public abstract class WebHandler<Request, Response> implements Handler<RoutingContext> {
     private boolean withOptionsHandler = true;
+
+    private static void fail(RoutingContext context, Throwable err) {
+        if (err instanceof HttpStatusException) {
+            HttpStatusException statusException = (HttpStatusException) err;
+            context.response().setStatusMessage(statusException.getPayload());
+            context.fail(statusException.getStatusCode(), err);
+        } else context.fail(err);
+    }
 
     @Override
     public final void handle(RoutingContext routingContext) {
@@ -33,14 +41,6 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         } catch (Throwable err) {
             fail(routingContext, err);
         }
-    }
-
-    private static void fail(RoutingContext context, Throwable err) {
-        if (err instanceof HttpStatusException) {
-            HttpStatusException statusException = (HttpStatusException) err;
-            context.response().setStatusMessage(statusException.getPayload());
-            context.fail(statusException.getStatusCode(), err);
-        } else context.fail(err);
     }
 
     public abstract Future<Response> exec(@Nullable Request request) throws Throwable;

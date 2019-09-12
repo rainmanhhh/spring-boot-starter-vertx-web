@@ -1,14 +1,13 @@
 package ez.spring.vertx.web.handler.configure;
 
+import ez.spring.vertx.web.VertxWebConfiguration;
+import io.vertx.ext.web.handler.LoggerFormat;
+import io.vertx.ext.web.handler.LoggerHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-
-import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.ext.web.handler.LoggerFormat;
-import io.vertx.ext.web.handler.LoggerHandler;
 
 @Lazy
 @Configuration

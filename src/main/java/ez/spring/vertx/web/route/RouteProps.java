@@ -1,11 +1,11 @@
 package ez.spring.vertx.web.route;
 
+import io.vertx.core.http.HttpMethod;
 import org.springframework.lang.Nullable;
 
 import java.util.Set;
 
-import io.vertx.core.http.HttpMethod;
-
+@SuppressWarnings("WeakerAccess")
 public class RouteProps {
     @Nullable
     private String path;

@@ -1,14 +1,13 @@
 package ez.spring.vertx.web.handler;
 
-import org.springframework.lang.Nullable;
-
-import java.util.Set;
-
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.lang.Nullable;
+
+import java.util.Set;
 
 public class OptionsHandler implements Handler<RoutingContext> {
     private final String allow;

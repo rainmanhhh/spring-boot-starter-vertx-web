@@ -1,13 +1,13 @@
 package ez.spring.vertx.web.handler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("WeakerAccess")
 public class ErrorLogHandler implements Handler<RoutingContext> {
     private static final Logger log = LoggerFactory.getLogger(ErrorLogHandler.class);
     private int errorCode = HttpResponseStatus.INTERNAL_SERVER_ERROR.code();

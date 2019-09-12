@@ -1,8 +1,8 @@
 package ez.spring.vertx.web.handler.configure;
 
-import java.util.Set;
-
 import io.vertx.core.http.HttpMethod;
+
+import java.util.Set;
 
 public interface HandlerConfiguration {
     boolean isEnabled();
@@ -11,12 +11,14 @@ public interface HandlerConfiguration {
 
     /**
      * null means ignore it(use auto-incremental sequence)
+     *
      * @return order
      */
     Integer getOrder();
 
     /**
      * null means ignore it(use auto-incremental sequence)
+     *
      * @param order order value
      * @return this
      */

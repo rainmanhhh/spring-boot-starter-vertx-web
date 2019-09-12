@@ -1,14 +1,13 @@
 package ez.spring.vertx.web.handler.configure;
 
+import ez.spring.vertx.web.VertxWebConfiguration;
+import io.vertx.ext.web.handler.FaviconHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.Nullable;
-
-import ez.spring.vertx.web.VertxWebConfiguration;
-import io.vertx.ext.web.handler.FaviconHandler;
 
 @Lazy
 @Configuration

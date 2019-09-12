@@ -1,19 +1,19 @@
 package ez.spring.vertx.web.handler.request;
 
+import io.vertx.core.json.Json;
+import io.vertx.ext.web.RoutingContext;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.vertx.core.Vertx;
-import io.vertx.core.json.Json;
-import io.vertx.ext.web.RoutingContext;
-
 /**
  * request reader for url querystring. eg: decode "a=1&b=str" to {a:1, b:"str"}
+ *
  * @param <Request>
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class QsRequestReader<Request> implements RequestReader<Request> {
     private final Class<Request> requestClass;
     private final Map<Field, ValueSetter> setterMap = new HashMap<>();
@@ -36,8 +36,6 @@ public class QsRequestReader<Request> implements RequestReader<Request> {
     }
 
     interface ValueSetter {
-        void set(Object obj, Field field, RoutingContext context) throws Throwable;
-
         static ValueSetter of(Field field) {
             Class<?> fieldType = field.getType();
             if (fieldType == String.class) return new StringSetter();
@@ -47,6 +45,8 @@ public class QsRequestReader<Request> implements RequestReader<Request> {
                 return new JsonSetter();
             }
         }
+
+        void set(Object obj, Field field, RoutingContext context) throws Throwable;
     }
 
     static class StringSetter implements ValueSetter {

@@ -1,10 +1,13 @@
 package ez.spring.vertx.web.route;
 
 import ez.spring.vertx.Beans;
+import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.handler.OptionsHandler;
 import ez.spring.vertx.web.handler.WebHandler;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
@@ -13,25 +16,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class RouteMapper {
-    private static final Logger log = LoggerFactory.getLogger(RouteMapper.class);
+public class EzRouter implements Handler<HttpServerRequest> {
+    private static final Logger log = LoggerFactory.getLogger(EzRouter.class);
     private final Router router;
-    private List<RouteProps> routePropsList = Collections.emptyList();
+    private final List<RouteProps> routePropsList;
 
-    public RouteMapper(Router router) {
+    private EzRouter(Router router, List<RouteProps> routePropsList) {
         this.router = router;
+        this.routePropsList = routePropsList;
     }
 
-    private String toJson(Collection<?> collection) {
+    /**
+     * should call this method in vertx thread(verticle.start)
+     *
+     * @param routePropsList route props list
+     * @return {@link EzRouter}
+     */
+    public static EzRouter router(List<RouteProps> routePropsList) {
+        Vertx vertx = EzUtil.vertx();
+        EzRouter ezRouter = new EzRouter(Router.router(vertx), routePropsList);
+        ezRouter.map();
+        return ezRouter;
+    }
+
+    private String collectionToJson(Collection<?> collection) {
         return collection == null ? "" : Json.encode(collection);
     }
 
-    @SuppressWarnings("unused")
-    public Router map() {
+    private void map() {
         for (int i = 0; i < routePropsList.size(); i++) {
             RouteProps routeProps = routePropsList.get(i);
             try {
@@ -60,7 +75,7 @@ public class RouteMapper {
                     route.handler(handler);
                     log.info("mapping {}{} to handler: {}{}",
                             path == null ? "/*" : path,
-                            toJson(methods),
+                            collectionToJson(methods),
                             handler.getClass().getCanonicalName(),
                             withOptionsHandler ? " (support OPTIONS)" : ""
                     );
@@ -69,7 +84,7 @@ public class RouteMapper {
                     route.failureHandler(errorHandler);
                     log.info("mapping {}{} to errorHandler: {}",
                             path == null ? "/*" : path,
-                            toJson(methods),
+                            collectionToJson(methods),
                             errorHandler.getClass().getCanonicalName());
                 }
                 if (handler == null && errorHandler == null) {
@@ -80,12 +95,12 @@ public class RouteMapper {
                 throw new RuntimeException(err);
             }
         }
-        return router;
     }
 
+    @SuppressWarnings("unchecked")
     private Handler<RoutingContext> getHandler(String descriptor) {
         if (descriptor == null) return null;
-        else return Beans.get(descriptor);
+        else return ((Handler<RoutingContext>) Beans.withDescriptor(descriptor).get());
     }
 
     private void setMethods(Route route, Set<HttpMethod> methods) {
@@ -104,8 +119,8 @@ public class RouteMapper {
         return routePropsList;
     }
 
-    public RouteMapper setRoutePropsList(List<RouteProps> routePropsList) {
-        this.routePropsList = routePropsList;
-        return this;
+    @Override
+    public void handle(HttpServerRequest event) {
+        router.handle(event);
     }
 }
