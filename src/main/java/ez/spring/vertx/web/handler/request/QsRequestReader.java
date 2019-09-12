@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * request reader for url querystring. eg: decode "a=1&b=str" to {a:1, b:"str"}
+ * request reader for url querystring. eg: decode "a=1&amp;b=str" to {a:1, b:"str"}
  *
- * @param <Request>
+ * @param <Request> request object type
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class QsRequestReader<Request> implements RequestReader<Request> {

@@ -7,7 +7,7 @@ import org.springframework.lang.Nullable;
 /**
  * request reader for json body. eg: decode `{a:1, b:"cde"}` to {a:1, b:"cde"}
  *
- * @param <Request>
+ * @param <Request> request object type
  */
 @SuppressWarnings("WeakerAccess")
 public class JsonBodyRequestReader<Request> implements RequestReader<Request> {
