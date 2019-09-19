@@ -1,23 +1,23 @@
 package ez.spring.vertx.web.handler;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.vertx.core.Handler;
+import io.vertx.core.Future;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("WeakerAccess")
-public class ErrorLogHandler implements Handler<RoutingContext> {
+public class ErrorLogHandler implements RoutingHandler {
     private static final Logger log = LoggerFactory.getLogger(ErrorLogHandler.class);
     private int errorCode = HttpResponseStatus.INTERNAL_SERVER_ERROR.code();
     private int warnCode = HttpResponseStatus.BAD_REQUEST.code();
     private boolean showWarnStack = false;
 
     @Override
-    public void handle(RoutingContext event) {
+    public Future<?> exec(RoutingContext event) {
         event.addBodyEndHandler(v -> log(event));
-        event.next();
+        return Future.succeededFuture();
     }
 
     protected void log(RoutingContext context) {

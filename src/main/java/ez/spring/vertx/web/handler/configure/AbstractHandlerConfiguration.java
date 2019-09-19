@@ -6,7 +6,8 @@ import java.util.Set;
 
 /**
  * orders:<br>
- * {@link TimeoutHandlerConfiguration}: -1000;<br>
+ * {@link TimeoutHandlerConfiguration}: -50000;<br>
+ * {@link MDCHandlerConfiguration}: -1000;<br>
  * {@link CorsHandlerConfiguration}: -900;<br>
  * {@link LoggerHandlerConfiguration}: -800;<br>
  * {@link ErrorLogHandlerConfiguration}: -700;<br>
@@ -18,7 +19,6 @@ import java.util.Set;
  */
 public abstract class AbstractHandlerConfiguration implements HandlerConfiguration {
     private boolean enabled = true;
-    private Integer order = null;
     private Set<HttpMethod> methods = null;
     private String path = null;
     private boolean withOptionsHandler = false;
@@ -36,17 +36,6 @@ public abstract class AbstractHandlerConfiguration implements HandlerConfigurati
     @Override
     public AbstractHandlerConfiguration setEnabled(boolean enabled) {
         this.enabled = enabled;
-        return this;
-    }
-
-    @Override
-    public Integer getOrder() {
-        return order;
-    }
-
-    @Override
-    public AbstractHandlerConfiguration setOrder(Integer order) {
-        this.order = order;
         return this;
     }
 

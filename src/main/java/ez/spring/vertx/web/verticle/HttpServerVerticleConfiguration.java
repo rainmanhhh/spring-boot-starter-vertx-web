@@ -1,6 +1,7 @@
 package ez.spring.vertx.web.verticle;
 
 import ez.spring.vertx.Main;
+import ez.spring.vertx.VertxProps;
 import ez.spring.vertx.deploy.DeploymentOptionsEx;
 import ez.spring.vertx.deploy.VerticleDeploy;
 import ez.spring.vertx.http.HttpServerConfiguration;
@@ -14,12 +15,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.*;
 
 import java.util.*;
+
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
 
 @Import(HttpServerConfiguration.class)
 @Configuration
@@ -33,9 +33,12 @@ public class HttpServerVerticleConfiguration {
 
     @Qualifier(HTTP_SERVER_VERTICLE)
     @Bean
-    public VerticleDeploy httpServerVerticleDeploy(HttpServerVerticleConfiguration configuration) {
-        return new VerticleDeploy(configuration.getDeploy())
-                .setDescriptor(HttpServerVerticle.class.getCanonicalName());
+    public VerticleDeploy httpServerVerticleDeploy(VertxProps vertxProps) {
+        VerticleDeploy verticleDeploy = new VerticleDeploy(getDeploy());
+        verticleDeploy
+                .setDescriptor(HttpServerVerticle.class.getCanonicalName())
+                .setInstances(vertxProps.getEventLoopPoolSize());
+        return verticleDeploy;
     }
 
     @Lazy
@@ -44,6 +47,7 @@ public class HttpServerVerticleConfiguration {
         return Router.router(vertx);
     }
 
+    @Scope(SCOPE_PROTOTYPE)
     @Lazy
     @Bean
     public HttpServerVerticle httpServerVerticle(

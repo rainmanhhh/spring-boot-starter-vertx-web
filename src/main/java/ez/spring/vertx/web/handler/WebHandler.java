@@ -22,7 +22,7 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
     }
 
     @Override
-    public final void handle(RoutingContext routingContext) {
+    public void handle(RoutingContext routingContext) {
         final RequestReader<Request> requestReader = getRequestReader();
         final ResponseWriter<Response> responseWriter = getResponseWriter();
         final Request request;
@@ -35,8 +35,11 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
         }
         try {
             exec(request).setHandler(r -> {
-                if (r.succeeded()) responseWriter.writeResponse(routingContext, r.result());
-                else fail(routingContext, r.cause());
+                if (r.succeeded()) {
+                    if (responseWriter == null)
+                        routingContext.response().setStatusCode(HttpResponseStatus.NO_CONTENT.code()).end();
+                    else responseWriter.writeResponse(routingContext, r.result());
+                } else fail(routingContext, r.cause());
             });
         } catch (Throwable err) {
             fail(routingContext, err);
@@ -48,6 +51,7 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
     @Nullable
     abstract public RequestReader<Request> getRequestReader();
 
+    @Nullable
     abstract public ResponseWriter<Response> getResponseWriter();
 
     public boolean isWithOptionsHandler() {

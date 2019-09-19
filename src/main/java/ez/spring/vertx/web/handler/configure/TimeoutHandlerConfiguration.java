@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Lazy;
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".timeout-handler")
 public class TimeoutHandlerConfiguration extends AbstractHandlerConfiguration {
     private boolean enabled = !ActiveProfiles.getInstance().isDev();
-    private Integer order = -1000;
+    private Integer order = -50000;
     private String handler = TimeoutHandler.class.getCanonicalName();
 
     /**

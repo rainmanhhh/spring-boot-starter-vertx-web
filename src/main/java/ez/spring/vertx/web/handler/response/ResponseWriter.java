@@ -1,6 +1,7 @@
 package ez.spring.vertx.web.handler.response;
 
 import io.vertx.ext.web.RoutingContext;
+import org.springframework.lang.Nullable;
 
 public interface ResponseWriter<Response> {
 
@@ -16,5 +17,5 @@ public interface ResponseWriter<Response> {
         return new TextResponseWriter();
     }
 
-    void writeResponse(RoutingContext context, Response response);
+    void writeResponse(RoutingContext context, @Nullable Response response);
 }
