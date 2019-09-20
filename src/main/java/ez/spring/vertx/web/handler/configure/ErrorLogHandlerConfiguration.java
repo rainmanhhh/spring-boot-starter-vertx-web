@@ -1,6 +1,6 @@
 package ez.spring.vertx.web.handler.configure;
 
-import ez.spring.vertx.ActiveProfiles;
+import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import ez.spring.vertx.web.handler.ErrorLogHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -31,7 +31,7 @@ public class ErrorLogHandlerConfiguration extends AbstractHandlerConfiguration {
      * @see HttpResponseStatus#BAD_REQUEST
      */
     private int warnCode = 400;
-    private boolean showWarnStack = ActiveProfiles.getInstance().isDev();
+    private boolean showWarnStack = EzUtil.getActiveProfiles().isDev();
 
     @Lazy
     @ConditionalOnMissingBean(ErrorLogHandler.class)

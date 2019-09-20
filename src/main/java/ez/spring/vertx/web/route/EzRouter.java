@@ -42,8 +42,25 @@ public class EzRouter implements Handler<HttpServerRequest> {
         return ezRouter;
     }
 
-    private String collectionToJson(Collection<?> collection) {
-        return collection == null ? "" : Json.encode(collection);
+    public static void printRoutes(Collection<RouteProps> routes) {
+        int i = 0;
+        for (RouteProps r : routes) {
+            String path = r.getPath();
+            String handler = r.getHandler();
+            String errorHandler = r.getErrorHandler();
+            String methods = r.getMethods() == null ? "" : Json.encode(r.getMethods());
+            log.info("route: {}{}, handler: {}{}, errorHandler:{}",
+                    path == null ? "/*" : path,
+                    methods,
+                    handler,
+                    r.isWithOptionsHandler() ? " (support OPTIONS)" : "",
+                    errorHandler
+            );
+            if (handler == null && errorHandler == null) {
+                log.error("mainRouteProps[{}] has no handler/errorHandler: {}", i, Json.encode(r));
+            }
+            i++;
+        }
     }
 
     private void map() {
@@ -73,23 +90,8 @@ public class EzRouter implements Handler<HttpServerRequest> {
                         optionsRoute.handler(new OptionsHandler(methods));
                     }
                     route.handler(handler);
-                    log.info("mapping {}{} to handler: {}{}",
-                            path == null ? "/*" : path,
-                            collectionToJson(methods),
-                            handler.getClass().getCanonicalName(),
-                            withOptionsHandler ? " (support OPTIONS)" : ""
-                    );
                 }
-                if (errorHandler != null) {
-                    route.failureHandler(errorHandler);
-                    log.info("mapping {}{} to errorHandler: {}",
-                            path == null ? "/*" : path,
-                            collectionToJson(methods),
-                            errorHandler.getClass().getCanonicalName());
-                }
-                if (handler == null && errorHandler == null) {
-                    log.error("routePropsList[{}] has no handler/errorHandler: {}", i, Json.encode(routeProps));
-                }
+                if (errorHandler != null) route.failureHandler(errorHandler);
             } catch (Throwable err) {
                 log.error("mapping routes[{}]: {} failed", i, Json.encode(routeProps), err);
                 throw new RuntimeException(err);

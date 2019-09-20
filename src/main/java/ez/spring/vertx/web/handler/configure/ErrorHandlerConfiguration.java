@@ -1,6 +1,6 @@
 package ez.spring.vertx.web.handler.configure;
 
-import ez.spring.vertx.ActiveProfiles;
+import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.handler.ErrorHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,7 +20,7 @@ public class ErrorHandlerConfiguration extends AbstractHandlerConfiguration {
      * @see ErrorHandler#DEFAULT_ERROR_HANDLER_TEMPLATE
      */
     private String errorTemplateName = "META-INF/vertx/web/vertx-web-error.html";
-    private boolean displayExceptionDetails = ActiveProfiles.getInstance().isDev();
+    private boolean displayExceptionDetails = EzUtil.getActiveProfiles().isDev();
 
     @Lazy
     @ConditionalOnMissingBean(ErrorHandler.class)

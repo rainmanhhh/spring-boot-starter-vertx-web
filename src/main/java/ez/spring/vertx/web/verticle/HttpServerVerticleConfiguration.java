@@ -7,17 +7,23 @@ import ez.spring.vertx.deploy.VerticleDeploy;
 import ez.spring.vertx.http.HttpServerConfiguration;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import ez.spring.vertx.web.handler.configure.HandlerConfiguration;
+import ez.spring.vertx.web.route.EzRouter;
 import ez.spring.vertx.web.route.RouteProps;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
 
@@ -26,10 +32,14 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROT
 @ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE)
 public class HttpServerVerticleConfiguration {
     static final String HTTP_SERVER_VERTICLE = VertxWebConfiguration.PREFIX + ".http-server-verticle";
-
+    private final List<RouteProps> routes;
     @NestedConfigurationProperty
     private DeploymentOptionsEx deploy = new DeploymentOptionsEx().setEnabled(false);
-    private List<RouteProps> routes = Collections.emptyList();
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    public HttpServerVerticleConfiguration(List<RouteProps> routes) {
+        this.routes = routes;
+    }
 
     @Qualifier(HTTP_SERVER_VERTICLE)
     @Bean
@@ -47,13 +57,12 @@ public class HttpServerVerticleConfiguration {
         return Router.router(vertx);
     }
 
-    @Scope(SCOPE_PROTOTYPE)
+    @Main
     @Lazy
     @Bean
-    public HttpServerVerticle httpServerVerticle(
+    public List<RouteProps> mainRouteProps(
             ApplicationContext applicationContext,
-            HttpServerVerticleConfiguration httpServerVerticleConfiguration,
-            @Main HttpServerOptions httpServerOptions
+            HttpServerVerticleConfiguration httpServerVerticleConfiguration
     ) {
         Collection<HandlerConfiguration> handlerProps = applicationContext.getBeansOfType(HandlerConfiguration.class).values();
         ArrayList<HandlerConfiguration> handlerConfigurationList = new ArrayList<>(handlerProps);
@@ -79,7 +88,18 @@ public class HttpServerVerticleConfiguration {
             }
         }
 
-        // set routes for httpServerVerticle
+        log.info("mainRouteProps:");
+        EzRouter.printRoutes(routes);
+        return routes;
+    }
+
+    @Scope(SCOPE_PROTOTYPE)
+    @Lazy
+    @Bean
+    public HttpServerVerticle httpServerVerticle(
+            @Main List<RouteProps> routes,
+            @Main HttpServerOptions httpServerOptions
+    ) {
         return new HttpServerVerticle(httpServerOptions).setRoutes(routes);
     }
 
@@ -104,10 +124,5 @@ public class HttpServerVerticleConfiguration {
 
     public List<RouteProps> getRoutes() {
         return routes;
-    }
-
-    public HttpServerVerticleConfiguration setRoutes(List<RouteProps> routes) {
-        this.routes = routes;
-        return this;
     }
 }

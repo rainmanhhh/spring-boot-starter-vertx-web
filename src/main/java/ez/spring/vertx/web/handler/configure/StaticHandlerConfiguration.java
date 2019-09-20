@@ -1,6 +1,6 @@
 package ez.spring.vertx.web.handler.configure;
 
-import ez.spring.vertx.ActiveProfiles;
+import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.Http2PushMapping;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -44,7 +44,7 @@ public class StaticHandlerConfiguration extends AbstractHandlerConfiguration {
     /**
      * @see StaticHandler#DEFAULT_CACHING_ENABLED
      */
-    private boolean cachingEnabled = !ActiveProfiles.getInstance().isDev();
+    private boolean cachingEnabled = !EzUtil.getActiveProfiles().isDev();
     /**
      * @see StaticHandler#DEFAULT_DIRECTORY_LISTING
      */

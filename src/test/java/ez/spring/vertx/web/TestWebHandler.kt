@@ -17,13 +17,11 @@ class TestWebHandler : AsyncWebHandler<TestWebHandler.Body, TestWebHandler.Body>
         return request
     }
 
-    override fun getRequestReader(): RequestReader<Body>? {
-        return RequestReader.jsonBody(Body::class.java)
-    }
+    override val requestReader: RequestReader<Body>?
+        get() = RequestReader.jsonBody(Body::class.java)
 
-    override fun getResponseWriter(): JsonResponseWriter<Body>? {
-        return ResponseWriter.json()
-    }
+    override val responseWriter: JsonResponseWriter<Body>?
+        get() = ResponseWriter.json()
 
     class Body {
         var a = 0

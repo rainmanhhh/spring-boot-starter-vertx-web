@@ -1,6 +1,6 @@
 package ez.spring.vertx.web.handler.configure;
 
-import ez.spring.vertx.ActiveProfiles;
+import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.ext.web.handler.TimeoutHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Lazy;
 @Configuration
 @ConfigurationProperties(VertxWebConfiguration.PREFIX + ".timeout-handler")
 public class TimeoutHandlerConfiguration extends AbstractHandlerConfiguration {
-    private boolean enabled = !ActiveProfiles.getInstance().isDev();
+    private boolean enabled = !EzUtil.getActiveProfiles().isDev();
     private Integer order = -50000;
     private String handler = TimeoutHandler.class.getCanonicalName();
 

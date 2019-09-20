@@ -2,6 +2,7 @@ package ez.spring.vertx.web;
 
 import ez.spring.vertx.ActiveProfiles;
 import ez.spring.vertx.VertxConfiguration;
+import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.handler.OkHandler;
 import io.vertx.ext.web.common.WebEnvironment;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,7 +20,7 @@ public class VertxWebConfiguration {
     public static final String PREFIX = VertxConfiguration.PREFIX + ".web";
 
     public VertxWebConfiguration() {
-        ActiveProfiles activeProfiles = ActiveProfiles.getInstance();
+        ActiveProfiles activeProfiles = EzUtil.getActiveProfiles();
         if (activeProfiles.isDev()) {
             System.setProperty(WebEnvironment.SYSTEM_PROPERTY_NAME, "dev");
         } else if (activeProfiles.isProd()) {
