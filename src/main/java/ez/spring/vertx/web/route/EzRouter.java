@@ -102,7 +102,7 @@ public class EzRouter implements Handler<HttpServerRequest> {
     @SuppressWarnings("unchecked")
     private Handler<RoutingContext> getHandler(String descriptor) {
         if (descriptor == null) return null;
-        else return ((Handler<RoutingContext>) Beans.withDescriptor(descriptor).get());
+        else return ((Handler<RoutingContext>) Beans.withDescriptor(descriptor).allowImplicit().get());
     }
 
     private void setMethods(Route route, Set<HttpMethod> methods) {
