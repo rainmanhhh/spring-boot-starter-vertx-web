@@ -1,5 +1,6 @@
 package ez.spring.vertx.web.handler.request;
 
+import io.vertx.core.Future;
 import io.vertx.ext.web.RoutingContext;
 
 public interface RequestReader<Request> {
@@ -23,5 +24,5 @@ public interface RequestReader<Request> {
         return new QsRequestReader<>(requestClass);
     }
 
-    Request readRequest(RoutingContext context) throws Throwable;
+    Future<Request> readRequest(RoutingContext context) throws Throwable;
 }

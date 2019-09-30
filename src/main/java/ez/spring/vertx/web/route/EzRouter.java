@@ -1,6 +1,6 @@
 package ez.spring.vertx.web.route;
 
-import ez.spring.vertx.Beans;
+import ez.spring.vertx.bean.Beans;
 import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.handler.OptionsHandler;
 import ez.spring.vertx.web.handler.WebHandler;

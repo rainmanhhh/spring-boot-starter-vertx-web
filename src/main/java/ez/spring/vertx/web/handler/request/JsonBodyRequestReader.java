@@ -1,5 +1,6 @@
 package ez.spring.vertx.web.handler.request;
 
+import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.lang.Nullable;
@@ -19,7 +20,7 @@ public class JsonBodyRequestReader<Request> implements RequestReader<Request> {
 
     @Nullable
     @Override
-    public Request readRequest(RoutingContext context) {
-        return Json.mapper.convertValue(context.getBodyAsJson(), requestClass);
+    public Future<Request> readRequest(RoutingContext context) {
+        return Future.succeededFuture(Json.mapper.convertValue(context.getBodyAsJson(), requestClass));
     }
 }

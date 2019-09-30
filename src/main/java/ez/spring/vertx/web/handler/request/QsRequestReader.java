@@ -1,5 +1,6 @@
 package ez.spring.vertx.web.handler.request;
 
+import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
 
@@ -27,12 +28,12 @@ public class QsRequestReader<Request> implements RequestReader<Request> {
     }
 
     @Override
-    public Request readRequest(RoutingContext context) throws Throwable {
+    public Future<Request> readRequest(RoutingContext context) throws Throwable {
         Request request = requestClass.getConstructor().newInstance();
         for (Map.Entry<Field, ValueSetter> entry : setterMap.entrySet()) {
             entry.getValue().set(request, entry.getKey(), context);
         }
-        return request;
+        return Future.succeededFuture(request);
     }
 
     interface ValueSetter {
