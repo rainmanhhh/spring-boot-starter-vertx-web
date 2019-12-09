@@ -44,7 +44,7 @@ public class SpringVertxWebTests {
     public void checkTestWebHandler() {
         TestWebHandler.Data req = new TestWebHandler.Data();
         req.setValue(String.valueOf(Math.random()));
-        TestWebHandler.Data resp = EzJob.create(vertx).<HttpResponse<Buffer>>then(
+        TestWebHandler.Data resp = EzJob.create(vertx, "send request to TestWebHandler").<HttpResponse<Buffer>>then(
                 p -> webClient.post("/").sendJson(req, p)
         ).thenCompose(r -> Future.succeededFuture(
                 Json.decodeValue(r.body(), TestWebHandler.Data.class)

@@ -1,5 +1,12 @@
 package ez.spring.vertx.web.route;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import ez.spring.vertx.bean.Beans;
 import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.handler.OptionsHandler;
@@ -12,12 +19,6 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 public class EzRouter implements Handler<HttpServerRequest> {
     private static final Logger log = LoggerFactory.getLogger(EzRouter.class);
@@ -83,7 +84,7 @@ public class EzRouter implements Handler<HttpServerRequest> {
                     // optionsHandler
                     boolean withOptionsHandler = routeProps.isWithOptionsHandler();
                     if (handler instanceof WebHandler)
-                        withOptionsHandler = ((WebHandler) handler).isWithOptionsHandler();
+                        withOptionsHandler = ((WebHandler<?, ?>) handler).isWithOptionsHandler();
                     if (withOptionsHandler) {
                         Route optionsRoute = path == null ? router.route() : router.route(path);
                         optionsRoute.method(HttpMethod.OPTIONS);
@@ -99,10 +100,9 @@ public class EzRouter implements Handler<HttpServerRequest> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Handler<RoutingContext> getHandler(String descriptor) {
         if (descriptor == null) return null;
-        else return ((Handler<RoutingContext>) Beans.withDescriptor(descriptor).allowImplicit().get());
+        else return Beans.<Handler<RoutingContext>>withDescriptor(descriptor).getBean(true);
     }
 
     private void setMethods(Route route, Set<HttpMethod> methods) {

@@ -2,9 +2,7 @@ package ez.spring.vertx.web.verticle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import ez.spring.vertx.VertxProps;
-import ez.spring.vertx.deploy.DeploymentOptionsEx;
 import ez.spring.vertx.deploy.VerticleDeploy;
 import ez.spring.vertx.http.HttpServerConfiguration;
 import ez.spring.vertx.web.VertxWebConfiguration;
@@ -37,22 +34,23 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROT
 public class HttpServerVerticleConfiguration {
     static final String HTTP_SERVER_VERTICLE = VertxWebConfiguration.PREFIX + ".http-server-verticle";
     private final List<RouteProps> routes;
-    @NestedConfigurationProperty
-    private DeploymentOptionsEx deploy = new DeploymentOptionsEx().setEnabled(false);
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public HttpServerVerticleConfiguration(List<RouteProps> routes) {
         this.routes = routes;
     }
 
-    @Qualifier(HTTP_SERVER_VERTICLE)
+    @Lazy
+    @ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE + ".deploy")
     @Bean
     public VerticleDeploy httpServerVerticleDeploy(VertxProps vertxProps) {
-        VerticleDeploy verticleDeploy = new VerticleDeploy(getDeploy());
-        verticleDeploy
-                .setDescriptor(HttpServerVerticle.class.getCanonicalName())
-                .setInstances(vertxProps.getEventLoopPoolSize());
-        return verticleDeploy;
+        HttpServerVerticleDeploy vd = new HttpServerVerticleDeploy();
+        vd.setDescriptor(HttpServerVerticle.class.getCanonicalName());
+        vd.setInstances(vertxProps.getEventLoopPoolSize());
+        vd.setWorkerPoolSize(vertxProps.getWorkerPoolSize());
+        vd.setMaxWorkerExecuteTime(vertxProps.getMaxWorkerExecuteTime());
+        vd.setMaxWorkerExecuteTimeUnit(vertxProps.getMaxWorkerExecuteTimeUnit());
+        return vd;
     }
 
     @Lazy
@@ -114,15 +112,6 @@ public class HttpServerVerticleConfiguration {
                 .setHandler(hc.getHandler())
                 .setErrorHandler(hc.getErrorHandler())
                 .setWithOptionsHandler(hc.isWithOptionsHandler());
-    }
-
-    public DeploymentOptionsEx getDeploy() {
-        return deploy;
-    }
-
-    public HttpServerVerticleConfiguration setDeploy(DeploymentOptionsEx deploy) {
-        this.deploy = deploy;
-        return this;
     }
 
     public List<RouteProps> getRoutes() {
