@@ -53,7 +53,10 @@ public class QsRequestReader<Request> implements RequestReader<Request> {
     static class StringSetter implements ValueSetter {
         @Override
         public void set(Object obj, Field field, RoutingContext context) throws Throwable {
-            field.set(obj, context.queryParams().get(field.getName()));
+            String strValue = context.queryParams().get(field.getName());
+            if (strValue != null) {
+                field.set(obj, strValue);
+            }
         }
     }
 
