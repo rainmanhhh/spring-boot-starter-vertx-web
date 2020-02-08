@@ -28,4 +28,6 @@ public class TextResponseWriter extends AbstractResponseWriter<Object> {
     public Buffer encodeBody(@Nullable Object o) {
         return o == null ? Buffer.buffer() : Buffer.buffer(o.toString(), charset);
     }
+
+    public static final TextResponseWriter INSTANCE = new TextResponseWriter();
 }

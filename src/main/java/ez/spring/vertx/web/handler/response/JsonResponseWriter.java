@@ -20,7 +20,9 @@ public class JsonResponseWriter<Response> extends AbstractResponseWriter<Respons
     }
 
     @Override
-    public Buffer encodeBody(@Nullable Response response) {
+    public final Buffer encodeBody(@Nullable Response response) {
         return Json.encodeToBuffer(response);
     }
+
+    public static final JsonResponseWriter<Object> INSTANCE = new JsonResponseWriter<>();
 }
