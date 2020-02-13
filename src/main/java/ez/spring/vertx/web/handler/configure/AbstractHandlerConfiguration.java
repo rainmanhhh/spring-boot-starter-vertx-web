@@ -1,8 +1,8 @@
 package ez.spring.vertx.web.handler.configure;
 
-import io.vertx.core.http.HttpMethod;
-
 import java.util.Set;
+
+import io.vertx.core.http.HttpMethod;
 
 /**
  * orders:<br>
@@ -18,57 +18,57 @@ import java.util.Set;
  * {@link ErrorHandlerConfiguration}: 1200;<br>
  */
 public abstract class AbstractHandlerConfiguration implements HandlerConfiguration {
-    private boolean enabled = true;
-    private Set<HttpMethod> methods = null;
-    private String path = null;
-    private boolean withOptionsHandler = false;
+  private boolean enabled = true;
+  private Set<HttpMethod> methods = null;
+  private String path = null;
+  private boolean withOptionsHandler = false;
 
-    @Override
-    public String getErrorHandler() {
-        return null;
-    }
+  @Override
+  public String getErrorHandler() {
+    return null;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+  @Override
+  public boolean isEnabled() {
+    return enabled;
+  }
 
-    @Override
-    public AbstractHandlerConfiguration setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        return this;
-    }
+  @Override
+  public AbstractHandlerConfiguration setEnabled(boolean enabled) {
+    this.enabled = enabled;
+    return this;
+  }
 
-    @Override
-    public Set<HttpMethod> getMethods() {
-        return methods;
-    }
+  @Override
+  public Set<HttpMethod> getMethods() {
+    return methods;
+  }
 
-    @Override
-    public AbstractHandlerConfiguration setMethods(Set<HttpMethod> methods) {
-        this.methods = methods;
-        return this;
-    }
+  @Override
+  public AbstractHandlerConfiguration setMethods(Set<HttpMethod> methods) {
+    this.methods = methods;
+    return this;
+  }
 
-    @Override
-    public String getPath() {
-        return path;
-    }
+  @Override
+  public String getPath() {
+    return path;
+  }
 
-    @Override
-    public AbstractHandlerConfiguration setPath(String path) {
-        this.path = path;
-        return this;
-    }
+  @Override
+  public AbstractHandlerConfiguration setPath(String path) {
+    this.path = path;
+    return this;
+  }
 
-    @Override
-    public boolean isWithOptionsHandler() {
-        return withOptionsHandler;
-    }
+  @Override
+  public boolean isWithOptionsHandler() {
+    return withOptionsHandler;
+  }
 
-    @Override
-    public AbstractHandlerConfiguration setWithOptionsHandler(boolean withOptionsHandler) {
-        this.withOptionsHandler = withOptionsHandler;
-        return this;
-    }
+  @Override
+  public AbstractHandlerConfiguration setWithOptionsHandler(boolean withOptionsHandler) {
+    this.withOptionsHandler = withOptionsHandler;
+    return this;
+  }
 }

@@ -4,12 +4,12 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.ext.web.RoutingContext;
 
 public class NoContentResponseWriter implements ResponseWriter<Object> {
+  public static final NoContentResponseWriter INSTANCE = new NoContentResponseWriter();
+
   @Override
   public final void writeResponse(RoutingContext context, Object o) {
     context.response().setStatusCode(
       HttpResponseStatus.NO_CONTENT.code()
     ).end();
   }
-
-  public static final NoContentResponseWriter INSTANCE = new NoContentResponseWriter();
 }

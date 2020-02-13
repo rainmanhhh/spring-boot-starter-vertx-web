@@ -32,89 +32,89 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROT
 @Configuration
 @ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE)
 public class HttpServerVerticleConfiguration {
-    static final String HTTP_SERVER_VERTICLE = VertxWebConfiguration.PREFIX + ".http-server-verticle";
-    private final List<RouteProps> routes;
-    private Logger log = LoggerFactory.getLogger(getClass());
+  static final String HTTP_SERVER_VERTICLE = VertxWebConfiguration.PREFIX + ".http-server-verticle";
+  private final List<RouteProps> routes;
+  private Logger log = LoggerFactory.getLogger(getClass());
 
-    public HttpServerVerticleConfiguration(List<RouteProps> routes) {
-        this.routes = routes;
+  public HttpServerVerticleConfiguration(List<RouteProps> routes) {
+    this.routes = routes;
+  }
+
+  @Lazy
+  @ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE + ".deploy")
+  @Bean
+  public VerticleDeploy httpServerVerticleDeploy(VertxProps vertxProps) {
+    HttpServerVerticleDeploy vd = new HttpServerVerticleDeploy();
+    vd.setDescriptor(HttpServerVerticle.class.getCanonicalName());
+    vd.setInstances(vertxProps.getEventLoopPoolSize());
+    vd.setWorkerPoolSize(vertxProps.getWorkerPoolSize());
+    vd.setMaxWorkerExecuteTime(vertxProps.getMaxWorkerExecuteTime());
+    vd.setMaxWorkerExecuteTimeUnit(vertxProps.getMaxWorkerExecuteTimeUnit());
+    return vd;
+  }
+
+  @Lazy
+  @Bean
+  public Router router(Vertx vertx) {
+    return Router.router(vertx);
+  }
+
+  @Lazy
+  @Bean
+  public List<RouteProps> mainRouteProps(
+    ApplicationContext applicationContext,
+    HttpServerVerticleConfiguration httpServerVerticleConfiguration
+  ) {
+    Collection<HandlerConfiguration> handlerProps = applicationContext.getBeansOfType(HandlerConfiguration.class).values();
+    ArrayList<HandlerConfiguration> handlerConfigurationList = new ArrayList<>(handlerProps);
+    handlerConfigurationList.sort(Comparator.comparing(HandlerConfiguration::getOrder));
+    ArrayList<RouteProps> routes = new ArrayList<>();
+    // add common routes whose order is null or less than 0
+    for (HandlerConfiguration handlerConfiguration : handlerConfigurationList) {
+      Integer order = handlerConfiguration.getOrder();
+      if (handlerConfiguration.isEnabled() && (order == null || order < 0)) {
+        routes.add(routeProps(handlerConfiguration));
+      }
     }
 
-    @Lazy
-    @ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE + ".deploy")
-    @Bean
-    public VerticleDeploy httpServerVerticleDeploy(VertxProps vertxProps) {
-        HttpServerVerticleDeploy vd = new HttpServerVerticleDeploy();
-        vd.setDescriptor(HttpServerVerticle.class.getCanonicalName());
-        vd.setInstances(vertxProps.getEventLoopPoolSize());
-        vd.setWorkerPoolSize(vertxProps.getWorkerPoolSize());
-        vd.setMaxWorkerExecuteTime(vertxProps.getMaxWorkerExecuteTime());
-        vd.setMaxWorkerExecuteTimeUnit(vertxProps.getMaxWorkerExecuteTimeUnit());
-        return vd;
+    // add custom routes
+    List<RouteProps> customRoutes = httpServerVerticleConfiguration.getRoutes();
+    if (customRoutes != null && !customRoutes.isEmpty()) routes.addAll(customRoutes);
+
+    // add common routes whose order greater than 0
+    for (HandlerConfiguration handlerConfiguration : handlerConfigurationList) {
+      Integer order = handlerConfiguration.getOrder();
+      if (handlerConfiguration.isEnabled() && order != null && order > 0) {
+        routes.add(routeProps(handlerConfiguration));
+      }
     }
 
-    @Lazy
-    @Bean
-    public Router router(Vertx vertx) {
-        return Router.router(vertx);
-    }
+    log.info("mainRouteProps:");
+    EzRouter.printRoutes(routes);
+    return routes;
+  }
 
-    @Lazy
-    @Bean
-    public List<RouteProps> mainRouteProps(
-            ApplicationContext applicationContext,
-            HttpServerVerticleConfiguration httpServerVerticleConfiguration
-    ) {
-        Collection<HandlerConfiguration> handlerProps = applicationContext.getBeansOfType(HandlerConfiguration.class).values();
-        ArrayList<HandlerConfiguration> handlerConfigurationList = new ArrayList<>(handlerProps);
-        handlerConfigurationList.sort(Comparator.comparing(HandlerConfiguration::getOrder));
-        ArrayList<RouteProps> routes = new ArrayList<>();
-        // add common routes whose order is null or less than 0
-        for (HandlerConfiguration handlerConfiguration : handlerConfigurationList) {
-            Integer order = handlerConfiguration.getOrder();
-            if (handlerConfiguration.isEnabled() && (order == null || order < 0)) {
-                routes.add(routeProps(handlerConfiguration));
-            }
-        }
+  @Scope(SCOPE_PROTOTYPE)
+  @Lazy
+  @Bean
+  public HttpServerVerticle httpServerVerticle(
+    List<RouteProps> routes,
+    HttpServerOptions httpServerOptions
+  ) {
+    return new HttpServerVerticle(httpServerOptions).setRoutes(routes);
+  }
 
-        // add custom routes
-        List<RouteProps> customRoutes = httpServerVerticleConfiguration.getRoutes();
-        if (customRoutes != null && !customRoutes.isEmpty()) routes.addAll(customRoutes);
+  private RouteProps routeProps(HandlerConfiguration hc) {
+    return new RouteProps()
+      .setPath(hc.getPath())
+      .setOrder(hc.getOrder())
+      .setMethods(hc.getMethods())
+      .setHandler(hc.getHandler())
+      .setErrorHandler(hc.getErrorHandler())
+      .setWithOptionsHandler(hc.isWithOptionsHandler());
+  }
 
-        // add common routes whose order greater than 0
-        for (HandlerConfiguration handlerConfiguration : handlerConfigurationList) {
-            Integer order = handlerConfiguration.getOrder();
-            if (handlerConfiguration.isEnabled() && order != null && order > 0) {
-                routes.add(routeProps(handlerConfiguration));
-            }
-        }
-
-        log.info("mainRouteProps:");
-        EzRouter.printRoutes(routes);
-        return routes;
-    }
-
-    @Scope(SCOPE_PROTOTYPE)
-    @Lazy
-    @Bean
-    public HttpServerVerticle httpServerVerticle(
-            List<RouteProps> routes,
-            HttpServerOptions httpServerOptions
-    ) {
-        return new HttpServerVerticle(httpServerOptions).setRoutes(routes);
-    }
-
-    private RouteProps routeProps(HandlerConfiguration hc) {
-        return new RouteProps()
-                .setPath(hc.getPath())
-                .setOrder(hc.getOrder())
-                .setMethods(hc.getMethods())
-                .setHandler(hc.getHandler())
-                .setErrorHandler(hc.getErrorHandler())
-                .setWithOptionsHandler(hc.isWithOptionsHandler());
-    }
-
-    public List<RouteProps> getRoutes() {
-        return routes;
-    }
+  public List<RouteProps> getRoutes() {
+    return routes;
+  }
 }

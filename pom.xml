@@ -1,23 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>spring-boot-starter-vertx-web</artifactId>
-  <modelVersion>4.0.0</modelVersion>
-  <name>spring-boot-starter-vertx-web</name>
-  <parent>
-    <artifactId>spring-boot-starter-vertx-parent</artifactId>
-    <groupId>com.github.rainmanhhh</groupId>
-    <version>0.0.16</version>
-    <!--suppress MavenModelInspection -->
-    <relativePath>../spring-boot-starter-vertx-parent/pom.xml</relativePath>
-  </parent>
-  <repositories>
-    <repository>
-      <id>jitpack</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <artifactId>spring-boot-starter-vertx-core</artifactId>
@@ -27,13 +12,26 @@
     <dependency>
       <artifactId>vertx-web</artifactId>
       <groupId>io.vertx</groupId>
-      <version>${vertxVersion}</version>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
       <artifactId>vertx-web-client</artifactId>
-      <version>${vertxVersion}</version>
+      <groupId>io.vertx</groupId>
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+  <name>spring-boot-starter-vertx-web</name>
+  <parent>
+    <artifactId>spring-boot-starter-vertx-parent</artifactId>
+    <groupId>com.github.rainmanhhh</groupId>
+    <!--suppress MavenModelInspection -->
+    <relativePath>../spring-boot-starter-vertx-parent/pom.xml</relativePath>
+    <version>0.0.17</version>
+  </parent>
+  <repositories>
+    <repository>
+      <id>jitpack</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
 </project>

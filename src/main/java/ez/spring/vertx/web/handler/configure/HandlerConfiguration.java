@@ -1,55 +1,55 @@
 package ez.spring.vertx.web.handler.configure;
 
-import io.vertx.core.http.HttpMethod;
-
 import java.util.Set;
 
+import io.vertx.core.http.HttpMethod;
+
 public interface HandlerConfiguration {
-    boolean isEnabled();
+  boolean isEnabled();
 
-    HandlerConfiguration setEnabled(boolean enabled);
+  HandlerConfiguration setEnabled(boolean enabled);
 
-    /**
-     * null means ignore it(use auto-incremental sequence)
-     *
-     * @return order
-     */
-    Integer getOrder();
+  /**
+   * null means ignore it(use auto-incremental sequence)
+   *
+   * @return order
+   */
+  Integer getOrder();
 
-    /**
-     * null means ignore it(use auto-incremental sequence)
-     *
-     * @param order order value
-     * @return this
-     */
-    HandlerConfiguration setOrder(Integer order);
+  /**
+   * null means ignore it(use auto-incremental sequence)
+   *
+   * @param order order value
+   * @return this
+   */
+  HandlerConfiguration setOrder(Integer order);
 
-    Set<HttpMethod> getMethods();
+  Set<HttpMethod> getMethods();
 
-    HandlerConfiguration setMethods(Set<HttpMethod> methods);
+  HandlerConfiguration setMethods(Set<HttpMethod> methods);
 
-    /**
-     * @return handler classname
-     */
-    String getHandler();
+  /**
+   * @return handler classname
+   */
+  String getHandler();
 
-    /**
-     * @return handler classname
-     */
-    String getErrorHandler();
+  /**
+   * @return handler classname
+   */
+  String getErrorHandler();
 
-    /**
-     * @return null means `/*`
-     */
-    String getPath();
+  /**
+   * @return null means `/*`
+   */
+  String getPath();
 
-    /**
-     * @param path null means `/*`
-     * @return this
-     */
-    HandlerConfiguration setPath(String path);
+  /**
+   * @param path null means `/*`
+   * @return this
+   */
+  HandlerConfiguration setPath(String path);
 
-    boolean isWithOptionsHandler();
+  boolean isWithOptionsHandler();
 
-    HandlerConfiguration setWithOptionsHandler(boolean withOptionsHandler);
+  HandlerConfiguration setWithOptionsHandler(boolean withOptionsHandler);
 }
