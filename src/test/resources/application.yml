@@ -1,12 +1,12 @@
 vertx:
-  web:
-    http-server-verticle:
-      deploy:
-        enabled: true
-      routes:
-        - path: /
-          handler: ez.spring.vertx.web.TestWebHandler
-          method: post
+  http-server:
+    deploy:
+      enabled: true
+    routes:
+      - path: /
+        handler: ez.spring.vertx.web.TestWebHandler
+        method: post
+
 logging:
   pattern:
     console: '%d{${LOG_DATEFORMAT_PATTERN:HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%X{WebReq}] [%t] %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n'

@@ -16,40 +16,35 @@ import java.util.Comparator;
 import java.util.List;
 
 import ez.spring.vertx.VertxProps;
-import ez.spring.vertx.deploy.VerticleDeploy;
+import ez.spring.vertx.deploy.DeployProps;
 import ez.spring.vertx.http.HttpServerConfiguration;
-import ez.spring.vertx.web.VertxWebConfiguration;
 import ez.spring.vertx.web.handler.configure.HandlerConfiguration;
-import ez.spring.vertx.web.route.EzRouter;
+import ez.spring.vertx.web.route.EzRouterUtil;
 import ez.spring.vertx.web.route.RouteProps;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 
+import static ez.spring.vertx.http.HttpServerConfiguration.PREFIX;
 import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
 
 @Import(HttpServerConfiguration.class)
+@ConfigurationProperties(PREFIX)
 @Configuration
-@ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE)
 public class HttpServerVerticleConfiguration {
-  static final String HTTP_SERVER_VERTICLE = VertxWebConfiguration.PREFIX + ".http-server-verticle";
-  private final List<RouteProps> routes;
-  private Logger log = LoggerFactory.getLogger(getClass());
+  private List<RouteProps> routes;
+  private static final Logger log = LoggerFactory.getLogger(HttpServerVerticleConfiguration.class);
 
-  public HttpServerVerticleConfiguration(List<RouteProps> routes) {
-    this.routes = routes;
-  }
-
+  @ConfigurationProperties(PREFIX + ".deploy")
   @Lazy
-  @ConfigurationProperties(HttpServerVerticleConfiguration.HTTP_SERVER_VERTICLE + ".deploy")
   @Bean
-  public VerticleDeploy httpServerVerticleDeploy(VertxProps vertxProps) {
-    HttpServerVerticleDeploy vd = new HttpServerVerticleDeploy();
+  public DeployProps httpServerVerticleDeploy(VertxProps vertxProps) {
+    DeployProps vd = new DeployProps();
     vd.setDescriptor(HttpServerVerticle.class.getCanonicalName());
     vd.setInstances(vertxProps.getEventLoopPoolSize());
-    vd.setWorkerPoolSize(vertxProps.getWorkerPoolSize());
-    vd.setMaxWorkerExecuteTime(vertxProps.getMaxWorkerExecuteTime());
-    vd.setMaxWorkerExecuteTimeUnit(vertxProps.getMaxWorkerExecuteTimeUnit());
+//    vd.setWorkerPoolSize(vertxProps.getWorkerPoolSize());
+//    vd.setMaxWorkerExecuteTime(vertxProps.getMaxWorkerExecuteTime());
+//    vd.setMaxWorkerExecuteTimeUnit(vertxProps.getMaxWorkerExecuteTimeUnit());
     return vd;
   }
 
@@ -90,7 +85,7 @@ public class HttpServerVerticleConfiguration {
     }
 
     log.info("mainRouteProps:");
-    EzRouter.printRoutes(routes);
+    EzRouterUtil.printRoutes(routes);
     return routes;
   }
 
@@ -101,7 +96,7 @@ public class HttpServerVerticleConfiguration {
     List<RouteProps> routes,
     HttpServerOptions httpServerOptions
   ) {
-    return new HttpServerVerticle(httpServerOptions).setRoutes(routes);
+    return new HttpServerVerticle(httpServerOptions, routes);
   }
 
   private RouteProps routeProps(HandlerConfiguration hc) {
@@ -116,5 +111,10 @@ public class HttpServerVerticleConfiguration {
 
   public List<RouteProps> getRoutes() {
     return routes;
+  }
+
+  public HttpServerVerticleConfiguration setRoutes(List<RouteProps> routes) {
+    this.routes = routes;
+    return this;
   }
 }

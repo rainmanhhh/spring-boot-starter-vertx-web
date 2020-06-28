@@ -32,7 +32,7 @@ public abstract class WebHandler<Request, Response> implements Handler<RoutingCo
       return;
     }
     try {
-      request.compose(this::exec).setHandler(it -> {
+      request.compose(this::exec).onComplete(it -> {
         if (it.succeeded()) getResponseWriter().writeResponse(event, it.result());
         else doFail(event, it.cause());
       });

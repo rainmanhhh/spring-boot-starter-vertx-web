@@ -16,7 +16,7 @@ import io.vertx.ext.web.handler.BodyHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".body-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".body-handler")
 public class BodyHandlerConfiguration extends AbstractHandlerConfiguration {
   private final String handler = BodyHandler.class.getCanonicalName();
   private Integer order = -400;

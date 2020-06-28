@@ -12,7 +12,7 @@ import ez.spring.vertx.web.handler.ErrorLogHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
 @Lazy
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + "error-log-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + "error-log-handler")
 @Configuration
 public class ErrorLogHandlerConfiguration extends AbstractHandlerConfiguration {
   private String handler = ErrorLogHandler.class.getCanonicalName();

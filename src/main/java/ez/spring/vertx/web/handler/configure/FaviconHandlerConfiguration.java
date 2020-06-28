@@ -12,7 +12,7 @@ import io.vertx.ext.web.handler.FaviconHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".favicon-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".favicon-handler")
 public class FaviconHandlerConfiguration extends AbstractHandlerConfiguration {
   private final String handler = FaviconHandler.class.getCanonicalName();
   private Integer order = 1000;

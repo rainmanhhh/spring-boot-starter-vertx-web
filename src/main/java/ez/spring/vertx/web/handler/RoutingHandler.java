@@ -7,9 +7,10 @@ import io.vertx.ext.web.RoutingContext;
 public interface RoutingHandler extends Handler<RoutingContext> {
   @Override
   default void handle(RoutingContext event) {
-    exec(event).setHandler(r -> {
-      if (r.succeeded()) event.next();
-      else event.fail(r.cause());
+    exec(event).onComplete(r -> {
+      if (r.succeeded()) {
+        if (!event.response().ended()) event.next();
+      } else event.fail(r.cause());
     });
   }
 

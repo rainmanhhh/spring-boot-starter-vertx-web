@@ -18,7 +18,7 @@ import io.vertx.ext.web.handler.StaticHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".static-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".static-handler")
 public class StaticHandlerConfiguration extends AbstractHandlerConfiguration {
   private boolean enabled = false;
   private Integer order = 1100;

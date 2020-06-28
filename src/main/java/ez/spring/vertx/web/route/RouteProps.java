@@ -13,12 +13,24 @@ public class RouteProps {
   @Nullable
   private Set<HttpMethod> methods = null;
   @Nullable
+  private String subRouter;
+  @Nullable
   private String handler;
   @Nullable
   private String errorHandler;
   @Nullable
   private Integer order = null;
   private boolean withOptionsHandler = false;
+
+  @Nullable
+  public String getSubRouter() {
+    return subRouter;
+  }
+
+  public RouteProps setSubRouter(@Nullable String subRouter) {
+    this.subRouter = subRouter;
+    return this;
+  }
 
   @Nullable
   public String getPath() {

@@ -26,6 +26,7 @@ public class OptionsHandler implements Handler<RoutingContext> {
 
   @Override
   public void handle(RoutingContext event) {
+    String allow = getAllow();
     if (allow == null) event.response().end();
     else event.response()
       .setStatusCode(HttpResponseStatus.NO_CONTENT.code())

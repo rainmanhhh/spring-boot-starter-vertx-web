@@ -1,10 +1,13 @@
 package ez.spring.vertx.web;
 
+import org.springframework.stereotype.Component;
+
 import ez.spring.vertx.web.handler.WebHandler;
 import ez.spring.vertx.web.handler.request.RequestReader;
 import ez.spring.vertx.web.handler.response.ResponseWriter;
 import io.vertx.core.Future;
 
+@Component
 public class TestWebHandler extends WebHandler<TestWebHandler.Data, TestWebHandler.Data> {
   @Override
   public Future<Data> exec(Data data) {

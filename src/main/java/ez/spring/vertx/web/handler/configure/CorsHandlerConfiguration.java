@@ -14,7 +14,7 @@ import io.vertx.ext.web.handler.CorsHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".cors-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".cors-handler")
 public class CorsHandlerConfiguration extends AbstractHandlerConfiguration {
   private String handler = CorsHandler.class.getCanonicalName();
   private Integer order = -900;

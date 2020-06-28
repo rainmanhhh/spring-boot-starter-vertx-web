@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 import ez.spring.vertx.ActiveProfiles;
-import ez.spring.vertx.VertxConfiguration;
+import ez.spring.vertx.http.HttpServerConfiguration;
 import ez.spring.vertx.util.EzUtil;
 import ez.spring.vertx.web.handler.OkHandler;
 import io.vertx.ext.web.common.WebEnvironment;
@@ -16,9 +16,8 @@ import io.vertx.ext.web.common.WebEnvironment;
  * by {@link ActiveProfiles}
  */
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX)
 public class VertxWebConfiguration {
-  public static final String PREFIX = VertxConfiguration.PREFIX + ".web";
+  public static final String HANDLER_PREFIX = HttpServerConfiguration.PREFIX + ".handlers";
 
   public VertxWebConfiguration() {
     ActiveProfiles activeProfiles = EzUtil.getActiveProfiles();
@@ -32,7 +31,7 @@ public class VertxWebConfiguration {
   }
 
   @Lazy
-  @ConfigurationProperties(PREFIX + ".ok-handler")
+  @ConfigurationProperties(HANDLER_PREFIX + ".ok-handler")
   @Bean
   public OkHandler okHandler() {
     return new OkHandler();

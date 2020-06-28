@@ -11,7 +11,7 @@ import ez.spring.vertx.web.handler.MDCHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".mdc-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".mdc-handler")
 public class MDCHandlerConfiguration extends AbstractHandlerConfiguration {
   private final String handler = MDCHandler.class.getCanonicalName();
   protected Integer order = -1000;

@@ -12,7 +12,7 @@ import io.vertx.ext.web.handler.LoggerHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".log-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".log-handler")
 public class LoggerHandlerConfiguration extends AbstractHandlerConfiguration {
   private String handler = LoggerHandler.class.getCanonicalName();
   private Integer order = -800;
@@ -26,8 +26,8 @@ public class LoggerHandlerConfiguration extends AbstractHandlerConfiguration {
   @Lazy
   @ConditionalOnMissingBean(LoggerHandler.class)
   @Bean
-  public LoggerHandler loggerHandler(LoggerHandlerConfiguration props) {
-    return LoggerHandler.create(props.isImmediate(), props.getLoggerFormat());
+  public LoggerHandler loggerHandler() {
+    return LoggerHandler.create(isImmediate(), getLoggerFormat());
   }
 
   @Override

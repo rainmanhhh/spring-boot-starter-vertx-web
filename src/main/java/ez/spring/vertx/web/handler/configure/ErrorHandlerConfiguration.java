@@ -12,9 +12,8 @@ import io.vertx.ext.web.handler.ErrorHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".error-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".error-handler")
 public class ErrorHandlerConfiguration extends AbstractHandlerConfiguration {
-  private final String handler = null;
   private final String errorHandler = ErrorHandler.class.getCanonicalName();
   private Integer order = 1200;
   /**
@@ -43,7 +42,7 @@ public class ErrorHandlerConfiguration extends AbstractHandlerConfiguration {
 
   @Override
   public String getHandler() {
-    return handler;
+    return null;
   }
 
   @Override

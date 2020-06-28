@@ -1,6 +1,5 @@
 package ez.spring.vertx.web.handler.configure;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -13,13 +12,12 @@ import ez.spring.vertx.VertxConfiguration;
 import ez.spring.vertx.web.VertxWebConfiguration;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.auth.AuthProvider;
 import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.sstore.SessionStore;
 
 @Lazy
 @Import({VertxConfiguration.class, VertxWebConfiguration.class})
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".session-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".session-handler")
 @Configuration
 public class SessionHandlerConfiguration extends AbstractHandlerConfiguration {
   private String handler = SessionHandler.class.getCanonicalName();
@@ -61,20 +59,15 @@ public class SessionHandlerConfiguration extends AbstractHandlerConfiguration {
   @Lazy
   @ConditionalOnMissingBean(SessionHandler.class)
   @Bean
-  public SessionHandler sessionHandler(
-    SessionStore sessionStore,
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired(required = false) AuthProvider authProvider
-  ) {
+  public SessionHandler sessionHandler(SessionStore sessionStore) {
     return SessionHandler.create(sessionStore)
-      .setAuthProvider(authProvider)
-      .setCookieHttpOnlyFlag(httpOnly)
-      .setCookieSecureFlag(secureFlag)
-      .setMinLength(sessionIdMinLength)
-      .setNagHttps(nagHttps)
-      .setSessionCookieName(cookieName)
-      .setSessionCookiePath(cookiePath)
-      .setSessionTimeout(timeout);
+      .setCookieHttpOnlyFlag(isHttpOnly())
+      .setCookieSecureFlag(isSecureFlag())
+      .setMinLength(getSessionIdMinLength())
+      .setNagHttps(isNagHttps())
+      .setSessionCookieName(getCookieName())
+      .setSessionCookiePath(getCookiePath())
+      .setSessionTimeout(getTimeout());
   }
 
   @Bean

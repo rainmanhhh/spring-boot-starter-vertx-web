@@ -22,6 +22,6 @@ public class JsonBodyRequestReader<Request> implements RequestReader<Request> {
   @Nullable
   @Override
   public Future<Request> readRequest(RoutingContext context) {
-    return Future.succeededFuture(Json.mapper.convertValue(context.getBodyAsJson(), requestClass));
+    return Future.succeededFuture(context.getBodyAsJson().mapTo(requestClass));
   }
 }

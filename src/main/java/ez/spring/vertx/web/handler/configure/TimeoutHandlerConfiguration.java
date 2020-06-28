@@ -12,7 +12,7 @@ import io.vertx.ext.web.handler.TimeoutHandler;
 
 @Lazy
 @Configuration
-@ConfigurationProperties(VertxWebConfiguration.PREFIX + ".timeout-handler")
+@ConfigurationProperties(VertxWebConfiguration.HANDLER_PREFIX + ".timeout-handler")
 public class TimeoutHandlerConfiguration extends AbstractHandlerConfiguration {
   private boolean enabled = !EzUtil.getActiveProfiles().isDev();
   private Integer order = -50000;
@@ -21,7 +21,7 @@ public class TimeoutHandlerConfiguration extends AbstractHandlerConfiguration {
   /**
    * @see TimeoutHandler#DEFAULT_TIMEOUT
    */
-  private long timeout = 5000L;
+  private long timeout = 5000;
   /**
    * @see TimeoutHandler#DEFAULT_ERRORCODE
    */
